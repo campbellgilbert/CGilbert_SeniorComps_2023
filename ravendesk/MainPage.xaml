@@ -3,22 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ravendesk.MainPage">
 
-    <Grid>
-        <Editor x:Name="textEditor" Text="" HeightRequest="500" />
-        <Button Text="Save" VerticalOptions="End" Clicked="OnSaveClicked" />
-    </Grid>
-    
- <!--
-    <ScrollView>
-        <VerticalStackLayout
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+	<Grid>
+		<!--<Editor x:Name="textEditor" Text="" HeightRequest="500" />-->
+        
+        <Button Text="File Select" Clicked="OnFileSelectButtonClicked"/>
+        <Button Text="Text Editor" Clicked="OnTextEditButtonClicked"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
- -->
+    </Grid>
+
 </ContentPage>

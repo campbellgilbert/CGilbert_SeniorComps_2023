@@ -9,22 +9,14 @@
             InitializeComponent();
         }
 
-        private void OnSaveClicked(object sender, EventArgs e)
+        private void OnFileSelectButtonClicked(object sender, EventArgs e)
         {
-            string text = textEditor.Text;
-            File.WriteAllText("savedDocument.txt", text);
+            Application.Current.MainPage.Navigation.PushModalAsync(new FileSelectPage(), true);
         }
 
-        /*private void OnCounterClicked(object sender, EventArgs e)
+        private void OnTextEditButtonClicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }*/
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
+        }
     }
 }
