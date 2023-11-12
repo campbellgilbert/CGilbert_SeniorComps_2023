@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ravendesk.CopilotDEMOPage"
+             Title="CopilotDEMOPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource Twilight}" />
+                <Setter Property="TextColor" Value="{StaticResource Midnight}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            
+            <Style x:Key="LayoutStyle" TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource Starlight}" />
+            </Style>
+            
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource Moonlight}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Subtitle"/>
+                <Setter Property="TextColor" Value="{StaticResource Midnight}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            
+            <Style x:Key="HeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Header"/>
+                <Setter Property="TextColor" Value="{StaticResource Midnight}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Spacing="10">
+        <Label
+            Text="AI Editor Recommendations"
+            SemanticProperties.HeadingLevel="Level1"
+            Style="{StaticResource HeaderStyle}"/>
+        
+        <Entry
+            x:Name="TextEntry"
+            Placeholder="Enter up to 8 sentences of text and recieve personal feedback from your own AI editor!"
+            SemanticProperties.Hint="Enter a short piece of text"
+            HorizontalOptions="Center"/>
+
+        <Button
+            x:Name="Feedback"
+            Text="Get Feedback"
+            SemanticProperties.Hint="Gives Feedback"
+            Clicked="OnFeedbackClicked"
+            BackgroundColor="{StaticResource Twilight}"
+            HorizontalOptions="Center"/>
+
+        <Label 
+            x:Name="SmallLabel"
+            Text="Your feedback will go here!"
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+    
+</ContentPage>

@@ -2,10 +2,10 @@ namespace ravendesk;
 
 public partial class TextEditor : ContentPage
 {
-	public TextEditor()
-	{
-		InitializeComponent();
-	}
+    public TextEditor()
+    {
+        InitializeComponent();
+    }
 
     private void OnSaveClicked(object sender, EventArgs e)
     {
@@ -16,5 +16,11 @@ public partial class TextEditor : ContentPage
     private void OnFileSelectButtonClicked(object sender, EventArgs e)
     {
         Application.Current.MainPage.Navigation.PushModalAsync(new FileSelectPage(), true);
+    }
+
+    private void OnCopilotClicked(object sender, EventArgs e)
+    {
+        var newWindow = new Window(new CopilotDEMOPage());
+        Application.Current.OpenWindow(newWindow);
     }
 }

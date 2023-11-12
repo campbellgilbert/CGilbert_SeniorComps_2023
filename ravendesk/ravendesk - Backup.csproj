@@ -70,9 +70,6 @@
 	  <MauiXaml Update="CopilotDEMOPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="StartupQuiz.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="TextEditor.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
