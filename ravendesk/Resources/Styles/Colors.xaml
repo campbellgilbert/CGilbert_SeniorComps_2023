@@ -41,4 +41,22 @@
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
 
+    <!--Standards-->
+    <Color x:Key="RavenBlack">#101820</Color>
+    <Color x:Key="QuillGray">#737880</Color>
+
+    <!--Desk-->
+    <Color x:Key="OakBG">#826248</Color>
+    <Color x:Key="OakButton">#b58864</Color>
+    <Color x:Key="MahoganyBG">#5C3A1E</Color>
+    <Color x:Key="MahoganyButton">#ad713e</Color>
+    <Color x:Key="ParchmentWhite">#F5F4F0</Color>
+    <Color x:Key="BirchPale">#ede1d8</Color>
+
+    <!--Raven (purples)-->
+    <Color x:Key="Midnight">#3e1d54</Color>
+    <Color x:Key="Starlight">#d3bce0</Color>
+    <Color x:Key="Twilight">#ba94d1</Color>
+    <Color x:Key="Moonlight">#f6f2f7</Color>
+
 </ResourceDictionary>

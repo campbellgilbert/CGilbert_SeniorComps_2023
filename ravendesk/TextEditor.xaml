@@ -3,50 +3,69 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ravendesk.TextEditor"
              Title="TextEditor">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="Button1" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MahoganyButton}" />
+                <Setter Property="TextColor" Value="{StaticResource RavenBlack}" />
+            </Style>
+            <Style x:Key="Button2" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource OakButton}" />
+                <Setter Property="TextColor" Value="{StaticResource RavenBlack}" />
+            </Style>
+            <Style x:Key="StackLayout1" TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource MahoganyBG}" />
+            </Style>
+            <Style x:Key="StackLayout2" TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource OakBG}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <VerticalStackLayout Margin="20">
-        <!--<Label 
-            Text="this is the home file edit whatever bar"
-            BackgroundColor="Bisque"
-            HorizontalOptions="Fill" />-->
-        
+
         <!--contains a frame object, contains a horizstacklayout object-->
         <!--how to create fully functional bar w buttons?-->
         
         <!--Menu bar-->
-        <Frame BorderColor="Black"
+        <Frame BorderColor="{StaticResource QuillGray}"
               Padding="0">
 
-            <StackLayout BackgroundColor="Bisque" Orientation="Horizontal">
+            <StackLayout BackgroundColor="{StaticResource MahoganyBG}" Orientation="Horizontal">
                 <Button Text="Save"
                         Clicked="OnSaveClicked"
-                        BackgroundColor="Bisque"
-                        TextColor="Black"
+                        Style="{StaticResource Button1}"
                         />
                 <Button Text="File Select"
                         Clicked="OnFileSelectButtonClicked"
-                        BackgroundColor="Bisque"
-                        TextColor="Black"
+                        Style="{StaticResource Button1}"
                         />
             </StackLayout>
         </Frame>
         
         <!--Toolbar-->
-        <Frame BorderColor="Black"
+        <Frame BorderColor="{StaticResource QuillGray}"
                Padding="0">
-
-            <StackLayout BackgroundColor="LemonChiffon" Orientation="Horizontal">
+            
+            <StackLayout BackgroundColor="{StaticResource OakBG}" Orientation="Horizontal">
                 <!--Search-->
-                <Button Text="ey gabbagool"
-                    BackgroundColor="LemonChiffon"
-                    TextColor="Black"
-                    />  
-                <!--Clipboard-->
-                    <!--undo, redo, paste, cut, copy-->
-                <!--Text-->
-                    <!--font, font size, bold, italics, underline, highlight, color-->
-                <!--Mode select-->
-                <!--another thing-->
+                <Entry
+                     x:Name="Search"
+                     Placeholder="Search..."
+                    BackgroundColor="{StaticResource BirchPale}"/>
+                <Button Text="Font"
+                    Style="{StaticResource Button2}"
+                />
+                <Button Text="Text size"
+                    Style="{StaticResource Button2}"
+                />
+                <Button Text="Bold"
+                    Style="{StaticResource Button2}"
+                />
+                <Button Text="Italics"
+                    Style="{StaticResource Button2}"
+                />
             </StackLayout>
         </Frame>
 
@@ -54,7 +73,15 @@
             x:Name="textEditor" 
             Text="" 
             HeightRequest="500" 
-            BackgroundColor="FloralWhite"/>
+            BackgroundColor="#F5F4F0">
+            <FlyoutBase.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Copy"/>
+                    <MenuFlyoutItem Text="Paste"/>
+                    <MenuFlyoutItem Text="OpenCopilot" Clicked="OnCopilotClicked"/>
+                </MenuFlyout>
+            </FlyoutBase.ContextFlyout>
+        </Editor>
     </VerticalStackLayout>
 
     <!--<Grid>
