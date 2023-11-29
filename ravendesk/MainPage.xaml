@@ -6,7 +6,6 @@
     <StackLayout BackgroundColor="WhiteSmoke" Orientation="Vertical">
         <Button Text="File Select" BackgroundColor="{StaticResource Starlight}" TextColor="Black" Clicked="OnFileSelectButtonClicked"/>
         <Button Text="Text Editor" BackgroundColor="{StaticResource Starlight}" TextColor="Black" Clicked="OnTextEditButtonClicked"/>
-        <Button Text="Startup Quiz" BackgroundColor="{StaticResource Starlight}" TextColor="Black" Clicked="OnStartupQuizButtonClicked"/>
         <Button Text="Copilot" BackgroundColor="{StaticResource Starlight}" TextColor="Black" Clicked="OnCopilotButtonClicked"/>
     </StackLayout>
 

@@ -54,9 +54,11 @@
     <Color x:Key="BirchPale">#ede1d8</Color>
 
     <!--Raven (purples)-->
-    <Color x:Key="Midnight">#3e1d54</Color>
-    <Color x:Key="Starlight">#d3bce0</Color>
+    <Color x:Key="Midnight">#5e337a</Color>
+    <Color x:Key="Haze">#6e4289</Color>
+    <Color x:Key="PRain">#9a6cb7</Color>
     <Color x:Key="Twilight">#ba94d1</Color>
+    <Color x:Key="Starlight">#d3bce0</Color>
     <Color x:Key="Moonlight">#f6f2f7</Color>
 
 </ResourceDictionary>

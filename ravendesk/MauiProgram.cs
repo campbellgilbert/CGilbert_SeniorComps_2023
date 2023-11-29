@@ -2,6 +2,11 @@
 using ChatGptNet.Models;
 using ChatGptNet.ServiceConfigurations;
 using Microsoft.Extensions.Logging;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
+using OpenAI.Assistants;
+using OpenAI;
 
 namespace ravendesk
 {
@@ -10,23 +15,56 @@ namespace ravendesk
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-                builder.Services.AddChatGpt(options =>
-                {
-                    var apiKey = "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";
-                    options.UseOpenAI(apiKey);
-                    options.DefaultModel = OpenAIChatGptModels.Gpt4;
-                    options.ThrowExceptionOnError = true;
-                    options.MessageLimit = 20;
-                    options.MessageExpiration = TimeSpan.FromMinutes(5);
-                });
 
+            //we can add the chatgpt api in the copilot page rather than here?
+            //CITE: https://github.com/RageAgainstThePixel/OpenAI-DotNet 
+
+            var ident = new OpenAIAuthentication("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");
+            var api = new OpenAIClient(ident);
+            string aiPersona = "You are a writer and editor who is very well-experienced in and passionate about many genres. " +
+                    "You are intuitive, creative, and deeply passionate about your craft. You have high standards for yourself and your peers. " +
+                    "Some of your favorite works include Beloved by Toni Morrison, Finnegans Wake by James Joyce, and This Is How You Lose The Time War " +
+                    "by Amal el-Mohtar and Max Gladstone. Your feedback is specific, focused, and actionable, and always peppered with guiding questions. ";
+
+            var assistant = api.AssistantsEndpoint.CreateAssistantAsync(
+                new CreateAssistantRequest(
+                    name: "Raven",
+                    instructions: aiPersona,
+                    model: "gpt-4"));
+
+            /*builder.Services.AddChatGpt(options =>
+            {
+                var apiKey = "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";
+                options.UseOpenAI(apiKey);
+                options.DefaultModel = OpenAIChatGptModels.Gpt4;
+                options.ThrowExceptionOnError = true;
+                options.MessageLimit = 20;
+                options.MessageExpiration = TimeSpan.FromMinutes(5);
+            });
+            builder.Services.AddChatGpt(options =>
+            {
+                var apiKey = "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";
+                options.UseOpenAI(apiKey);
+                options.DefaultParameters = 
+            })*/
+
+            //add community toolkit
+            builder.UseMauiApp<App>();
+            builder.UseMauiCommunityToolkit();
+
+            //add fonts
+            builder.UseMauiApp<App>().ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            }).UseMauiCommunityToolkit();
+
+
+            //add filesaver, folderpicker
+            builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+            builder.Services.AddSingleton<IFolderPicker>(FolderPicker.Default);
+
+            return builder.Build();
             /*
              private readonly HttpClient _httpClient;
             private readonly string _apiKey;
@@ -60,13 +98,9 @@ namespace ravendesk
                 // TODO: Add your logic to process the response here
             }
              */
-
-
-
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
             return builder.Build();
         }
     }
