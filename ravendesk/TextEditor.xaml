@@ -7,15 +7,15 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="Button1" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MahoganyButton}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PRain}" />
                 <Setter Property="TextColor" Value="{StaticResource RavenBlack}" />
             </Style>
             <Style x:Key="Button2" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource OakButton}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Starlight}" />
                 <Setter Property="TextColor" Value="{StaticResource RavenBlack}" />
             </Style>
             <Style x:Key="StackLayout1" TargetType="StackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource MahoganyBG}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Midnight}" />
             </Style>
             <Style x:Key="StackLayout2" TargetType="StackLayout">
                 <Setter Property="BackgroundColor" Value="{StaticResource OakBG}" />
@@ -23,7 +23,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <VerticalStackLayout Margin="20">
+    <VerticalStackLayout Margin="10">
 
         <!--contains a frame object, contains a horizstacklayout object-->
         <!--how to create fully functional bar w buttons?-->
@@ -32,13 +32,11 @@
         <Frame BorderColor="{StaticResource QuillGray}"
               Padding="0">
 
-            <StackLayout BackgroundColor="{StaticResource MahoganyBG}" Orientation="Horizontal">
-                <Button Text="Save"
-                        Clicked="OnSaveClicked"
+            <StackLayout BackgroundColor="{StaticResource Haze}" Orientation="Horizontal">
+                <Button Text="File"
                         Style="{StaticResource Button1}"
                         />
-                <Button Text="File Select"
-                        Clicked="OnFileSelectButtonClicked"
+                <Button Text="Save"
                         Style="{StaticResource Button1}"
                         />
             </StackLayout>
@@ -48,12 +46,13 @@
         <Frame BorderColor="{StaticResource QuillGray}"
                Padding="0">
             
-            <StackLayout BackgroundColor="{StaticResource OakBG}" Orientation="Horizontal">
+            <StackLayout BackgroundColor="{StaticResource Twilight}" Orientation="Horizontal">
                 <!--Search-->
                 <Entry
                      x:Name="Search"
                      Placeholder="Search..."
-                    BackgroundColor="{StaticResource BirchPale}"/>
+                     BackgroundColor="{StaticResource Moonlight}"
+                    />
                 <Button Text="Font"
                     Style="{StaticResource Button2}"
                 />
@@ -73,14 +72,17 @@
             x:Name="textEditor" 
             Text="" 
             HeightRequest="500" 
-            BackgroundColor="#F5F4F0">
+            IsSpellCheckEnabled="true"
+            BackgroundColor="{StaticResource White}"
+            TextChanged = "OnEditorTextChanged">
+            
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Copy"/>
-                    <MenuFlyoutItem Text="Paste"/>
+                    <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
                     <MenuFlyoutItem Text="OpenCopilot" Clicked="OnCopilotClicked"/>
                 </MenuFlyout>
             </FlyoutBase.ContextFlyout>
+          
         </Editor>
     </VerticalStackLayout>
 

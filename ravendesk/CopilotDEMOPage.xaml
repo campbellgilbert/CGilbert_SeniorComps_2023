@@ -5,11 +5,6 @@
              Title="CopilotDEMOPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key="ButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource Twilight}" />
-                <Setter Property="TextColor" Value="{StaticResource Midnight}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
             
             <Style x:Key="LayoutStyle" TargetType="StackLayout">
                 <Setter Property="BackgroundColor" Value="{StaticResource Starlight}" />
@@ -39,25 +34,44 @@
             Text="AI Editor Recommendations"
             SemanticProperties.HeadingLevel="Level1"
             Style="{StaticResource HeaderStyle}"/>
-        
-        <Entry
-            x:Name="TextEntry"
-            Placeholder="Enter up to 8 sentences of text and recieve personal feedback from your own AI editor!"
-            SemanticProperties.Hint="Enter a short piece of text"
-            HorizontalOptions="Center"/>
-
-        <Button
-            x:Name="Feedback"
-            Text="Get Feedback"
-            SemanticProperties.Hint="Gives Feedback"
-            Clicked="OnFeedbackClicked"
-            BackgroundColor="{StaticResource Twilight}"
-            HorizontalOptions="Center"/>
 
         <Label 
             x:Name="SmallLabel"
             Text="Your feedback will go here!"
             HorizontalOptions="Center" />
+
+        <Label 
+            x:Name="MoreFB"
+            Text="If you want more feedback..."
+            HorizontalOptions="Center" 
+            IsVisible="False"/>
+
+        <!--create picker for "elaborate on" options-->
+        <HorizontalStackLayout
+            HorizontalOptions="Center">
+
+            <Picker 
+                x:Name="picker"
+                IsVisible="False">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Can you elaborate on Number: </x:String>
+                        <x:String>Can you give some suggestions as to how to implement Number: </x:String>
+                        <x:String>Can you give feedback on just this section: </x:String>
+                        <x:String>Can you give feedback on just this character: </x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Entry 
+                x:Name="PickEntry"
+                Placeholder="8/Once upon a time.../Tyler Durden/etc."
+                BackgroundColor="{StaticResource White}"
+                IsVisible="False"
+                Completed="OnEntryFilled"/>
+
+        </HorizontalStackLayout>
+
     </VerticalStackLayout>
     
 </ContentPage>
