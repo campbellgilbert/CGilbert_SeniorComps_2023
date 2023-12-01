@@ -67,8 +67,9 @@
                 x:Name="PickEntry"
                 Placeholder="8/Once upon a time.../Tyler Durden/etc."
                 BackgroundColor="{StaticResource White}"
-                IsVisible="False"
-                Completed="OnEntryFilled"/>
+                IsVisible="False"/>
+                <!--" Completed="OnEntryFilled"-->
+                
 
         </HorizontalStackLayout>
 

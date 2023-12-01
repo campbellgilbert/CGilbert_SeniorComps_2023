@@ -5,6 +5,10 @@
         public MainPage()
         {
             InitializeComponent();
+            //Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
+            //auto-click button
+
+
         }
 
         private void OnFileSelectButtonClicked(object sender, EventArgs e)
