@@ -17,8 +17,10 @@ namespace ravendesk
             var builder = MauiApp.CreateBuilder();
 
             //we can add the chatgpt api in the copilot page rather than here?
-            //CITE: https://github.com/RageAgainstThePixel/OpenAI-DotNet 
+            //WHAT IS CAUSING ALL THIS HULLABALLOO?
 
+            //CITE: https://github.com/RageAgainstThePixel/OpenAI-DotNet 
+            /*
             var ident = new OpenAIAuthentication("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");
             var api = new OpenAIClient(ident);
             string aiPersona = "You are a writer and editor who is very well-experienced in and passionate about many genres. " +

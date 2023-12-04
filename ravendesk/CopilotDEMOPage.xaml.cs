@@ -72,7 +72,7 @@ public partial class CopilotDEMOPage : ContentPage
 
             while (run.Status != RunStatus.Completed)
             {
-                SmallLabel.Text = "Response loading...";
+                SmallLabel.Text = run.Status.ToString();
                 run = await run.UpdateAsync();
             }
 
