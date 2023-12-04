@@ -68,20 +68,19 @@
                 x:Name="PickEntry"
                 Placeholder="8/Once upon a time.../Tyler Durden/etc."
                 BackgroundColor="{StaticResource White}"
-                IsVisible="False"
-                Completed="OnEntryFilled"/>
-
+                IsVisible="False"/>
+            <!--Completed="OnEntryFilled"-->
 
         </HorizontalStackLayout>
         <Button
             x:Name="FollowUp"
             Text="Write follow-up suggestions..."
             HorizontalOptions="Center"
-            Clicked="OnFollowUpClicked"
-            TextColor="{StaticResource Moonlight}"
             BackgroundColor="{StaticResource PRain}"
+            TextColor="{StaticResource Moonlight}"
             IsVisible="False"
-            />
+            Clicked="OnFollowUpClicked"/>
+        <!--Clicked="OnFollowUpClicked"-->
         
     </VerticalStackLayout>
     

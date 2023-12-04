@@ -58,7 +58,9 @@ public partial class CopilotDEMOPage : ContentPage
     {
         try
         {
+            SmallLabel.Text = "loading...";
             //BIG FUCKING ISSUE: times out if text entered is too long
+            entryText = entryText.ReplaceLineEndings(" ");
 
             //trunctuate text if it's too long?
             //retrieve thread
@@ -72,6 +74,7 @@ public partial class CopilotDEMOPage : ContentPage
 
             while (run.Status != RunStatus.Completed)
             {
+                //SmallLabel.Text = entryText;
                 SmallLabel.Text = run.Status.ToString();
                 run = await run.UpdateAsync();
             }
@@ -84,11 +87,55 @@ public partial class CopilotDEMOPage : ContentPage
             this.run = run;
             this.thread = await thread.UpdateAsync();
 
-
-            picker.IsVisible = true;
-            MoreFB.IsVisible = true;
+            //picker.IsVisible = true;
+            //MoreFB.IsVisible = true;
             PickEntry.IsVisible = true;
             FollowUp.IsVisible = true;
+
+            /*let's just get the follow
+
+            /*while True:
+                run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+                print("run status", run.status)
+                if run.status=="requires_action":
+                    function_name, arguments, function_id  = get_function_details(run)
+                    function_response = execute_function_call(function_name,arguments)
+                    run = submit_tool_outputs(run,thread,function_id,function_response)
+                    continue
+                if run.status=="completed":
+                    messages = client.beta.threads.messages.list(thread_id=thread.id)
+                    latest_message = messages.data[0]
+                    text = latest_message.content[0].text.value
+                    print(text)
+                    user_input = input()
+                    if user_input == "STOP":
+                      break
+                    run,thread = create_message_and_run(assistant=assistant,query=user_input,thread=thread)
+                    continue;
+                time.sleep(1)
+
+
+            while (PickEntry.Text != "end")
+            {
+                var newMsg = await thread.CreateMessageAsync(PickEntry.Text);
+                var newRun = await thread.CreateRunAsync(assistant);
+
+                while (run.Status != RunStatus.Completed)
+                {
+                    //SmallLabel.Text = entryText;
+                    SmallLabel.Text = run.Status.ToString();
+                    run = await run.UpdateAsync();
+                }
+
+                //retrieve messages & print correct msg
+                messageList = await api.ThreadsEndpoint.ListMessagesAsync(thread.Id);
+                output = messageList.Items[0].PrintContent();
+                SmallLabel.Text = output;
+
+            }*/
+
+            //end run here???
+
             return;
         }
         catch
@@ -98,39 +145,48 @@ public partial class CopilotDEMOPage : ContentPage
         }
     }
 
-    //continued: have AI create possible follow ups
-    
-    private async void OnPickerSelected(object sender, EventArgs e)
-    {
-        var picker = (Picker)sender;
-        int selectedIndex = picker.SelectedIndex;
-        if (selectedIndex != -1)
-        {
-            this.followup = picker.Items[selectedIndex] + this.followup;
-        }
-        else
-        {
-            await DisplayAlert("No selection", "Please select an option.", "OK");
-            return;
-        }
-    }
-
-    private async void OnEntryFilled(object sender, EventArgs e)
-    {
-        if (!string.IsNullOrEmpty(((Entry)sender).Text))
-        {
-            this.followup = this.followup + ((Entry)sender).Text + "?";
-        } else
-        {
-            await DisplayAlert("No text", "Please enter some text.", "OK");
-            return;
-        }
-        
-    }
+   //EVERYTHING'S WORKING THAT SHOULD BE WORKING
+   //all that's left is bells, whistles, and making it all look nice
 
     //this is deeply fucking stupid but: let's put the new info on a new page
-    private void OnFollowUpClicked(object sender, EventArgs e)
+    private async void OnFollowUpClicked(object sender, EventArgs e)
     {
+
+        //var thread = await api.ThreadsEndpoint.RetrieveThreadAsync(this.thread.Id);
+
+        //do we need to retrieve thread and run once they've started??
+        //send message and run
+        
+        
+
+        var message = await thread.CreateMessageAsync(PickEntry.Text);
+        var run = await thread.CreateRunAsync(assistant);
+
+        while (run.Status != RunStatus.Completed)
+        {
+            //SmallLabel.Text = entryText;
+            //SmallLabel.Text = run.Status.ToString();
+            run = await run.UpdateAsync();
+        }
+
+        //retrieve messages & print correct msg
+        var messageList = await api.ThreadsEndpoint.ListMessagesAsync(thread.Id);
+        var output = messageList.Items[0].PrintContent();
+
+        var newWindow = new Window(new FollowupPopup(output));
+        Application.Current.OpenWindow(newWindow);
+
+        /*
+        var request = followup;
+        var message = await thread.CreateMessageAsync(request);
+        
+
+        /*
+        var run = await api.ThreadsEndpoint.RetrieveRunAsync("thread-id", "run-id");
+        // OR use extension method for convenience!
+        var run = await thread.RetrieveRunAsync("run-id");
+        var run = await run.UpdateAsync();
+
         picker.IsVisible = false;
         MoreFB.IsVisible = false;
         PickEntry.IsVisible = false;
@@ -144,7 +200,7 @@ public partial class CopilotDEMOPage : ContentPage
         //get response
         //send response to pop-up
 
-        //create new pop-up
+        //create new pop-up*/
 
 
     }

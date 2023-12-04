@@ -31,16 +31,11 @@
 
     <VerticalStackLayout Spacing="10"
                          HeightRequest="300"
-                         WidthRequest="100">
-
-        <Label
-            Text="AI Editor Recommendations"
-            SemanticProperties.HeadingLevel="Level2"
-            Style="{StaticResource HeaderStyle}"/>
-
+                         WidthRequest="100"
+                         BackgroundColor="{StaticResource Starlight}">
         <Label 
             x:Name="MainLabel"
-            Text="Your feedback will go here!"
+            Text="Further feedback"
             HorizontalOptions="Center"
             TextColor= "{StaticResource RavenBlack}"/>
 
