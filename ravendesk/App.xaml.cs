@@ -10,11 +10,10 @@
             MainPage = new AppShell();
 
             //register new pages
-            //File Select
+            Routing.RegisterRoute(nameof(TextEditor), typeof(TextEditor));
             Routing.RegisterRoute(nameof(FileSelectPage), typeof(FileSelectPage));
-
-            //FileSelectPage = new NavigationPage(new FileSelectPage);
-
+            Routing.RegisterRoute(nameof(CopilotDEMOPage), typeof(CopilotDEMOPage));
+            Routing.RegisterRoute(nameof(FollowupPopup), typeof(FollowupPopup));
         }
     }
 }

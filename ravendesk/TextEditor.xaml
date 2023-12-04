@@ -18,7 +18,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Midnight}" />
             </Style>
             <Style x:Key="StackLayout2" TargetType="StackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource OakBG}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Haze}" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -79,7 +79,7 @@
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
-                    <MenuFlyoutItem Text="OpenCopilot" Clicked="OnCopilotClicked"/>
+                    <MenuFlyoutItem Text="Open Editor" Clicked="OnCopilotClicked"/>
                 </MenuFlyout>
             </FlyoutBase.ContextFlyout>
           

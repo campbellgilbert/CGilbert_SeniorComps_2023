@@ -30,6 +30,7 @@
     </ContentPage.Resources>
 
     <VerticalStackLayout Spacing="10">
+       
         <Label
             Text="AI Editor Recommendations"
             SemanticProperties.HeadingLevel="Level1"
@@ -38,7 +39,8 @@
         <Label 
             x:Name="SmallLabel"
             Text="Your feedback will go here!"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"
+            TextColor= "{StaticResource RavenBlack}"/>
 
         <Label 
             x:Name="MoreFB"
@@ -49,16 +51,15 @@
         <!--create picker for "elaborate on" options-->
         <HorizontalStackLayout
             HorizontalOptions="Center">
-
             <Picker 
                 x:Name="picker"
                 IsVisible="False">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
-                        <x:String>Can you elaborate on Number: </x:String>
-                        <x:String>Can you give some suggestions as to how to implement Number: </x:String>
-                        <x:String>Can you give feedback on just this section: </x:String>
-                        <x:String>Can you give feedback on just this character: </x:String>
+                        <x:String>Can you elaborate on Number:</x:String>
+                        <x:String>Can you give some suggestions as to how to implement Number:</x:String>
+                        <x:String>Can you give feedback on just this section:</x:String>
+                        <x:String>Can you give feedback on just this character:</x:String>
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
@@ -70,8 +71,18 @@
                 IsVisible="False"
                 Completed="OnEntryFilled"/>
 
-        </HorizontalStackLayout>
 
+        </HorizontalStackLayout>
+        <Button
+            x:Name="FollowUp"
+            Text="Write follow-up suggestions..."
+            HorizontalOptions="Center"
+            Clicked="OnFollowUpClicked"
+            TextColor="{StaticResource Moonlight}"
+            BackgroundColor="{StaticResource PRain}"
+            IsVisible="False"
+            />
+        
     </VerticalStackLayout>
     
 </ContentPage>
