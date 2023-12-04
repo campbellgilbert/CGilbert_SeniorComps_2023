@@ -35,13 +35,16 @@
             Text="AI Editor Recommendations"
             SemanticProperties.HeadingLevel="Level1"
             Style="{StaticResource HeaderStyle}"/>
+        
+        <ScrollView>
 
-        <Label 
+            <Label 
             x:Name="SmallLabel"
             Text="Your feedback will go here!"
             HorizontalOptions="Center"
             TextColor= "{StaticResource RavenBlack}"/>
-
+        </ScrollView>
+        
         <Label 
             x:Name="MoreFB"
             Text="If you want more feedback..."
@@ -81,7 +84,6 @@
             IsVisible="False"
             Clicked="OnFollowUpClicked"/>
         <!--Clicked="OnFollowUpClicked"-->
-        
     </VerticalStackLayout>
     
 </ContentPage>
