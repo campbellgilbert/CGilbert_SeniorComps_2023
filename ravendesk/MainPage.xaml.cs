@@ -5,28 +5,19 @@
         public MainPage()
         {
             InitializeComponent();
-            this.Loaded += MainPage_Loaded;
 
+            this.Loaded += MainPage_Loaded;
+            
         }
 
         private void MainPage_Loaded(object sender, EventArgs e)
         {
+            //DisplayAlert("No text", "SOMETHING HAS GONE HORRIBLY WRONG", "OK");
             Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
         }
-        /*
-            private void OnFileSelectButtonClicked(object sender, EventArgs e)
-        {
-            Application.Current.MainPage.Navigation.PushModalAsync(new FileSelectPage(), true);
-        }
-
-        private void OnTextEditButtonClicked(object sender, EventArgs e)
+        private void OnTextEditorClicked(object sender, EventArgs e)
         {
             Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
         }
-
-        private void OnCopilotButtonClicked(object sender, EventArgs e)
-        {
-            Application.Current.MainPage.Navigation.PushModalAsync(new CopilotPage(), true);
-        }*/
     }
 }

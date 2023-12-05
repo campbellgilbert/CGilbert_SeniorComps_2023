@@ -70,16 +70,20 @@
 
         <Editor 
             x:Name="textEditor" 
-            Text="" 
+            CursorPosition="{Binding CursorPosition, Mode=OneWayToSource}"
+            SelectionLength="{Binding SelectionLength, Mode=OneWayToSource}"
+            Text="{Binding Text, Mode=TwoWay}"
             HeightRequest="500" 
             IsSpellCheckEnabled="true"
-            BackgroundColor="{StaticResource White}"
-            TextChanged = "OnEditorTextChanged">
+            BackgroundColor="{StaticResource White}">
             
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
-                    <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnCopilotClicked"/>
+                    <MenuFlyoutItem Text="Paste" Clicked="OnPasteClicked"/>
+                    <MenuFlyoutItem Text="Get Feedback (Selected Text)" Clicked="OnPartialFeedbackClicked"/>
+                    <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
+                    
                 </MenuFlyout>
             </FlyoutBase.ContextFlyout>
           

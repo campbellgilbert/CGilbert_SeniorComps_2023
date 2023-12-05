@@ -1,13 +1,6 @@
-﻿using ChatGptNet;
-using ChatGptNet.Models;
-using ChatGptNet.ServiceConfigurations;
-using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
+﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
-using OpenAI.Assistants;
-using OpenAI;
-using Microsoft.Maui.Controls.Compatibility.Platform.UWP;
 
 namespace ravendesk
 {
@@ -38,12 +31,7 @@ namespace ravendesk
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            })
-                .ConfigureMauiHandlers((handlers) =>
-                {
-                    handlers.AddHandler(typeof(Editor), typeof(EditorRenderer));
-                    //handlers.AddHandler(typeof(TextEditor), typeof(EditorRenderer));
-                });
+            });
 
             //add filesaver, folderpicker
             builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
