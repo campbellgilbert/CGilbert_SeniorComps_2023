@@ -160,8 +160,8 @@ public partial class CopilotPage : ContentPage
 
         //print msg to new window
         var newWindow = new Window(new FollowupPopup(output, "Continued Feedback"));
-        newWindow.Height = 900;
-        newWindow.Width = 400;
+        newWindow.MaximumHeight = 900;
+        newWindow.MaximumWidth = 400;
         Application.Current.OpenWindow(newWindow);
 
         

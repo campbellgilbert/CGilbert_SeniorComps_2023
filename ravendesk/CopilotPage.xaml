@@ -36,21 +36,22 @@
         <!-- Scrollable Content -->
 
     <ScrollView VerticalOptions="FillAndExpand"
-                    HorizontalOptions="Center">
-
+                HorizontalOptions="Center">
         <VerticalStackLayout Spacing="20"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Start">
+            HorizontalOptions="Center"
+            VerticalOptions="Start">
+            
             <Label Text="AI Editor Recommendations"
                HorizontalOptions="Center"
                FontAttributes="Bold"
-               FontSize="Large"/>
+               FontSize="Large"
+                   TextColor="{StaticResource Midnight}"/>
 
             <!-- Large Text Label -->
             <Label 
                      x:Name="SmallLabel"
                     HorizontalOptions="Center"
-                    TextColor= "{StaticResource RavenBlack}"/>
+                    TextColor= "{StaticResource Midnight}"/>
 
             <!-- Picker and Entry in Horizontal Layout -->
             <HorizontalStackLayout HorizontalOptions="Center">

@@ -12,27 +12,21 @@ public partial class TextEditor : ContentPage
     //private readonly IFileSaver fileSaver;
     //private readonly IFolderPicker folderPicker;
     private TextEditor editor;
-    private int _cursorPosition = 0;
-    private int _selectionLength = 0;
-    private string _text = "Hello World";
-
-
 
     public TextEditor(/*IFileSaver fileSaver, IFolderPicker folderPicker*/)
     {
         //this.fileSaver = fileSaver;
         //this.folderPicker = folderPicker;
         InitializeComponent();
+        this.Loaded += TextEditor_Loaded;
     }
-
-    void OnEditorTextChanged(object sender, TextChangedEventArgs e)
+    private async void TextEditor_Loaded(object sender, EventArgs e)
     {
-        string oldText = e.OldTextValue;
-        string newText = e.NewTextValue;
-        string myText = textEditor.Text;
+        await Clipboard.Default.SetTextAsync(null);
     }
 
-    /*public int CursorPosition
+    private int _cursorPosition = 0;
+    public int CursorPosition
     {
         get => _cursorPosition;
         set
@@ -43,6 +37,7 @@ public partial class TextEditor : ContentPage
         }
     }
 
+    private int _selectionLength = 0;
     public int SelectionLength
     {
         get => _selectionLength;
@@ -53,7 +48,8 @@ public partial class TextEditor : ContentPage
             OnPropertyChanged(nameof(SelectedText));
         }
     }
-    */
+
+    private string _text = "Hello World";
     public string Text
     {
         get => _text;
@@ -65,6 +61,22 @@ public partial class TextEditor : ContentPage
         }
     }
 
+    //startindex longer than length of string
+    public string SelectedText
+    {
+        get
+        {
+            if (Text == null || Text == string.Empty)
+                return string.Empty;
+            if (SelectionLength <= 0)
+                return string.Empty;
+            if (CursorPosition + SelectionLength > Text.Length)
+                return string.Empty;
+            
+            return textEditor.Text.Substring(CursorPosition, SelectionLength);
+        }
+    }
+    /*
     public string SelectedText
     {
         get
@@ -73,17 +85,49 @@ public partial class TextEditor : ContentPage
                 return string.Empty;
             if (textEditor.SelectionLength <= 0)
                 return string.Empty;
-            /*if (textEditor.CursorPosition + textEditor.SelectionLength > Text.Length)
-                return string.Empty;*/
+
+            //start at 20, move to 50
+            //cursorpos = 50, sellen = 30
+            //start at cursorPos - selLen, length selectionLength
+
+            //start at 3, move to 5
+            //cursorpos = 5, sellen = 2
+            //start at cursorPos - selLen = 3, length selectionLength
+            //when moving right, cursorpos will always be more or equal to sellen
+
+            //cursorpos 105, sellen = 2
+            //but what if we start at 107?? how do we know if we started at 107 or 107???
+            //if cursorposition
+            //okay maybe we can only select left to right. that's fine. this is fine
+
+            //start at cursorpos, length sellen
+            /*
+
+            if (textEditor.CursorPosition >= textEditor.SelectionLength)
+            {
+                return Text.Substring(textEditor.CursorPosition - textEditor.SelectionLength, textEditor.SelectionLength);
+            } //if (textEditor.CursorPosition < textEditor.SelectionLength + textEditor.CursorPosition)
+            
+            //start at 50, move to 20
+            //cursorpos = 20, sellen = 30
+            //start atcursorPos, length selectionLength
+
+            //start at 30, move to 5
+            //cursorpos = 5, sellen = 25
+            //start at cursorpos, length 
+
+            //start at 107, move to 105
+            //cursorpos = 105, sellen = 2
+            //start at cursorpos, end at sellen
+
+
             return Text.Substring(textEditor.CursorPosition, textEditor.SelectionLength);
         }
     }
-
-    //
     private async void OnCopyClicked(object sender, EventArgs e)
     {
-        int selStart;
-        int selEnd;
+        int selStart = textEditor.CursorPosition;
+        int selEnd = textEditor.SelectionLength;
 
         int cursPos = textEditor.CursorPosition;
         int selLen = textEditor.SelectionLength;
@@ -92,7 +136,7 @@ public partial class TextEditor : ContentPage
         //cursPos = 20, selectionlength = 5, selLen + cursPos = 20
         //selStart = cursPos - selLen
         //selEnd = cursPos
-
+        /*
 
         if (cursPos == cursPos + selLen)
         {
@@ -109,24 +153,61 @@ public partial class TextEditor : ContentPage
             selEnd = cursPos + selLen;
 
         }
-        //problem is in moving to right
+    //problem is in moving to right
 
-        string sel = Text.Substring(selStart, selEnd);
-        await Clipboard.Default.SetTextAsync(sel);
+    string sel = Text.Substring(selStart, selEnd);
+    await Clipboard.Default.SetTextAsync(sel);
         //await Clipboard.Default.SetTextAsync("This text was highlighted in the UI.");
+        return;
+    
+    */
+    //startindex longer than length of string
+
+
+    private async void OnCopyClicked(object sender, EventArgs e)
+    {
+        int start = textEditor.CursorPosition;
+        int length = textEditor.SelectionLength;
+        string sel = "";
+
+        sel = textEditor.Text.Substring(start, length);
+        await Clipboard.Default.SetTextAsync(sel);
+        /*
+        if (textEditor.CursorPosition > textEditor.SelectionLength)
+            sel = Text.Substring(CursorPosition, SelectionLength);
+        else
+            sel = Text.Substring(textEditor.CursorPosition, textEditor.SelectionLength);*/
+        //await DisplayAlert("No text", "selLen: " + textEditor.SelectionLength + "; cursorPos: " + textEditor.CursorPosition, "OK");
+
+        //await DisplayAlert("hehehe", "selLen: " + textEditor.SelectionLength + "; cursorPos: " + textEditor.CursorPosition + "\n sel : " + sel, "OK");
         return;
     }
 
-    //we don't NEED this but we DO need the selectedText to work. like, real bead. 
+    private async void OnCutClicked(object sender, EventArgs e)
+    {
+        int start = textEditor.CursorPosition;
+        int length = textEditor.SelectionLength;
+
+        //if no text is selected -- just paste wherever you are
+        string beforeCursor = textEditor.Text.Substring(0, start);
+        string afterCursor = textEditor.Text.Substring(start + length);
+
+        textEditor.Text = beforeCursor + afterCursor;
+        return;
+    }
+
+
+
     private async void OnPasteClicked(object sender, EventArgs e)
     {
-        //FIXME -- always pastes at position 0
         if (textEditor.CursorPosition < 0)
         {
             return;
         }
         string clipboardText = await Clipboard.Default.GetTextAsync();
         string insert;
+
+
         if (!string.IsNullOrEmpty(clipboardText))
         {
             insert = clipboardText;
@@ -136,18 +217,18 @@ public partial class TextEditor : ContentPage
             await DisplayAlert("No text", "Please enter some text", "OK");
             return;
         }
-        /*
-        string beforeCursor = textEditor.Text.Substring(0, textEditor.CursorPosition);
-        string afterCursor = textEditor.Text.Substring(textEditor.CursorPosition);
-        */
 
-        string beforeCursor = textEditor.Text.Substring(0, textEditor.CursorPosition);
-        string afterCursor = textEditor.Text.Substring(textEditor.CursorPosition);
+        if (textEditor.Text == null)
+        {
+            textEditor.Text = insert;
+            return;
+        }
 
+        int start = textEditor.CursorPosition;
 
-        //theres gotta be a better fucking way to do this dawg
-
-        //textEditor.Text = textEditor.Text.Substring(0, CursorPosition) + insert + textEditor.Text.Substring(CursorPosition);
+        //if no text is selected -- just paste wherever you are
+        string beforeCursor = textEditor.Text.Substring(0, start);
+        string afterCursor = textEditor.Text.Substring(start);
 
         textEditor.Text = beforeCursor + insert + afterCursor;
         return;
@@ -161,9 +242,10 @@ public partial class TextEditor : ContentPage
         Application.Current.OpenWindow(newWindow);
     }
 
-    private async void OnPartialFeedbackClicked(object sender, EventArgs e)
+    private void OnPartialFeedbackClicked(object sender, EventArgs e)
     {
-        await Clipboard.Default.SetTextAsync(SelectedText);
+        //await Clipboard.Default.SetTextAsync(SelectedText);
+        OnCopyClicked(sender, e);
         var newWindow = new Window(new CopilotPage());
         Application.Current.OpenWindow(newWindow);
     }

@@ -53,6 +53,9 @@
                      Placeholder="Search..."
                      BackgroundColor="{StaticResource Moonlight}"
                     />
+                <Button Text="all buttons are WIP, please ignore!"
+                     Style="{StaticResource Button2}"
+                 />
                 <Button Text="Font"
                     Style="{StaticResource Button2}"
                 />
@@ -65,6 +68,9 @@
                 <Button Text="Italics"
                     Style="{StaticResource Button2}"
                 />
+                <Label Text="{Binding CursorPosition}"/>
+                <Label Text="{Binding SelectionLength}"/>
+                <Label Text="{Binding SelectedText}"/>
             </StackLayout>
         </Frame>
 
@@ -75,18 +81,21 @@
             Text="{Binding Text, Mode=TwoWay}"
             HeightRequest="500" 
             IsSpellCheckEnabled="true"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
             BackgroundColor="{StaticResource White}">
-            
-            <FlyoutBase.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
-                    <MenuFlyoutItem Text="Paste" Clicked="OnPasteClicked"/>
+
+        <FlyoutBase.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
+                <MenuFlyoutItem Text="Paste" Clicked="OnPasteClicked"/>
+                    <MenuFlyoutItem Text="Cut" Clicked="OnCutClicked"/>
                     <MenuFlyoutItem Text="Get Feedback (Selected Text)" Clicked="OnPartialFeedbackClicked"/>
-                    <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
-                    
-                </MenuFlyout>
-            </FlyoutBase.ContextFlyout>
-          
+                <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
+
+            </MenuFlyout>
+        </FlyoutBase.ContextFlyout>
+
         </Editor>
     </VerticalStackLayout>
 
