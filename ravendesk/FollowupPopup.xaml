@@ -29,18 +29,26 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <VerticalStackLayout Spacing="10"
-                         HeightRequest="300"
-                         WidthRequest="100"
-                         BackgroundColor="{StaticResource Starlight}">
-        <Label 
-            x:Name="MainLabel"
-            Text="Further feedback"
-            HorizontalOptions="Center"
-            TextColor= "{StaticResource RavenBlack}"/>
+    <ScrollView VerticalOptions="FillAndExpand"
+                    HorizontalOptions="Center">
+        <VerticalStackLayout Spacing="10"
+                             BackgroundColor="{StaticResource Starlight}">
+            <Label
+                x:Name="Title"
+                Text="Feedback on..."
+                HorizontalOptions="Center"
+                TextColor= "{StaticResource RavenBlack}"
+                FontSize="Medium"
+                />
+            <Label 
+                x:Name="MainLabel"
+                Text="Further feedback"
+                HorizontalOptions="Center"
+                TextColor= "{StaticResource RavenBlack}"/>
 
        
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

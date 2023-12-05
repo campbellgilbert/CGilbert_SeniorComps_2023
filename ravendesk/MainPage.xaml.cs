@@ -5,9 +5,16 @@
         public MainPage()
         {
             InitializeComponent();
+            this.Loaded += MainPage_Loaded;
+
         }
 
-        private void OnFileSelectButtonClicked(object sender, EventArgs e)
+        private void MainPage_Loaded(object sender, EventArgs e)
+        {
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
+        }
+        /*
+            private void OnFileSelectButtonClicked(object sender, EventArgs e)
         {
             Application.Current.MainPage.Navigation.PushModalAsync(new FileSelectPage(), true);
         }
@@ -19,7 +26,7 @@
 
         private void OnCopilotButtonClicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage.Navigation.PushModalAsync(new CopilotDEMOPage(), true);
-        }
+            Application.Current.MainPage.Navigation.PushModalAsync(new CopilotPage(), true);
+        }*/
     }
 }

@@ -79,7 +79,7 @@
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
-                    <MenuFlyoutItem Text="Open Editor" Clicked="OnCopilotClicked"/>
+                    <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnCopilotClicked"/>
                 </MenuFlyout>
             </FlyoutBase.ContextFlyout>
           

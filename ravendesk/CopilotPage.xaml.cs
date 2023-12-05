@@ -4,10 +4,11 @@ using Microsoft.Maui.Controls;
 using OpenAI.Assistants;
 using OpenAI;
 using OpenAI.Threads;
+using Microsoft.Maui;
 
 namespace ravendesk;
 
-public partial class CopilotDEMOPage : ContentPage
+public partial class CopilotPage : ContentPage
 {
     private String entryText;
     private String followupText;
@@ -15,9 +16,8 @@ public partial class CopilotDEMOPage : ContentPage
     private ThreadResponse thread;
     private AssistantResponse assistant;
     private RunResponse run;
-    private string followup;
          
-    public CopilotDEMOPage()
+    public CopilotPage()
 	{
         InitializeComponent();
         this.Loaded += CopilotDEMOPage_Loaded;
@@ -32,7 +32,7 @@ public partial class CopilotDEMOPage : ContentPage
         var assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO");
 
 
-        //STEP 2: create thread and run
+        //STEP 2: create thread
         var thread = await api.ThreadsEndpoint.CreateThreadAsync();
         this.assistant = assistant;
         this.api = api;
@@ -45,6 +45,7 @@ public partial class CopilotDEMOPage : ContentPage
          * way to do a single section of text after just highlighting it
          * "too much text, please save and submit as file"
          */
+
         string clipboardText = await Clipboard.Default.GetTextAsync();
         if (!string.IsNullOrEmpty(clipboardText))
         {
@@ -62,6 +63,7 @@ public partial class CopilotDEMOPage : ContentPage
     {
         try
         {
+            //reformat entrytext because for some fucking reason this godforsaken program crashes when you feed it a LINE BREAK
             entryText = entryText.ReplaceLineEndings(" ");
 
             //retrieve thread
@@ -72,6 +74,7 @@ public partial class CopilotDEMOPage : ContentPage
                 "the text, do NOT say what X is) on the following: " + entryText;
             var message = await thread.CreateMessageAsync(request);
             var run = await thread.CreateRunAsync(assistant);
+
 
             while (run.Status != RunStatus.Completed)
             {
@@ -84,13 +87,14 @@ public partial class CopilotDEMOPage : ContentPage
             string output = messageList.Items[0].PrintContent();
             SmallLabel.Text = output;
 
-            this.run = run;
             this.thread = await thread.UpdateAsync();
 
-            picker.IsVisible = true;
-            MoreFB.IsVisible = true;
+            this.run = run;
+
+            FollowupPicker.IsVisible = true;
+            //MoreFB.IsVisible = true;
             PickEntry.IsVisible = true;
-            FollowUp.IsVisible = true;
+            FollowUpButton.IsVisible = true;
 
             return;
         }
@@ -101,30 +105,67 @@ public partial class CopilotDEMOPage : ContentPage
         }
     }
 
-   //EVERYTHING'S WORKING THAT SHOULD BE WORKING
-   //all that's left is bells, whistles, and making it all look nice
+    private async void OnPickerSelected(object sender, EventArgs e)
+    {
+        var picker = (Picker)sender;
+        int selectedIndex = picker.SelectedIndex;
+        if (selectedIndex != -1)
+        {
+            followupText = picker.Items[selectedIndex];
+        } else
+        {
+            await DisplayAlert("No selection", "Please select a response", "OK");
+            return;
+        }
+    }
 
-    //this is deeply fucking stupid but: let's put the new info on a new page
+    private async void OnEntryFilled(object sender, EventArgs e)
+    {
+        var entry = (Entry)sender;
+        followupText = followupText + ((Entry)sender).Text + "?";
+
+        if (!string.IsNullOrEmpty(followupText))
+        {
+            followupText = followupText + ((Entry)sender).Text + "?";
+        } else {
+            await DisplayAlert("No text", "Please enter some text", "OK");
+            return;
+        }
+    }
+
     private async void OnFollowUpClicked(object sender, EventArgs e)
     {
-        var message = await thread.CreateMessageAsync(PickEntry.Text);
+
+        if (string.IsNullOrEmpty(followupText))
+        {
+           await DisplayAlert("No text", "Please pick a response and enter appropriate text", "OK");
+            return;
+        }
+
+        var message = await thread.CreateMessageAsync(followupText);
         var run = await thread.CreateRunAsync(assistant);
+        this.run = run;
 
-        //FIXME: create new window, have it display the loading screen, then have it display the text
-
+        //FIXME: create new window, have it display the loading screen, then show completed text
         while (run.Status != RunStatus.Completed)
         {
-            FollowUp.Text = "Response loading...";
+            FollowUpButton.Text = "Response loading...";
             run = await run.UpdateAsync();
         }
 
-        //retrieve messages & print correct msg
+        //retrieve messages
         var messageList = await api.ThreadsEndpoint.ListMessagesAsync(thread.Id);
         var output = messageList.Items[0].PrintContent();
 
-        var newWindow = new Window(new FollowupPopup(output));
+
+        //print msg to new window
+        var newWindow = new Window(new FollowupPopup(output, "Continued Feedback"));
+        newWindow.Height = 900;
+        newWindow.Width = 400;
         Application.Current.OpenWindow(newWindow);
 
+        
+        FollowUpButton.Text = "Get follow-up suggestions";
     }
-
+   
 }

@@ -62,8 +62,8 @@
 	  <Compile Update="FileSelectPage.xaml.cs">
 	    <DependentUpon>FileSelectPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="CopilotDEMOPage.xaml.cs">
-	    <DependentUpon>CopilotDEMOPage.xaml</DependentUpon>
+	  <Compile Update="CopilotPage.xaml.cs">
+	    <DependentUpon>CopilotPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="FollowupPopup.xaml.cs">
 	    <DependentUpon>FollowupPopup.xaml</DependentUpon>
@@ -74,7 +74,7 @@
 	  <MauiXaml Update="FileSelectPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="CopilotDEMOPage.xaml">
+	  <MauiXaml Update="CopilotPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="FollowupPopup.xaml">

@@ -31,12 +31,12 @@ public partial class TextEditor : ContentPage
         return;
     }
 
-    private void OnCopilotClicked(object sender, EventArgs e)
+    private async void OnCopilotClicked(object sender, EventArgs e)
     {
-        //FIXME -- this just copies the whole fucking thing bruh there's gotta be a better way
-        OnCopyClicked(sender, e);
+        //  OnCopyClicked(sender, e);
+        await Clipboard.Default.SetTextAsync(textEditor.Text);
         //FIXME -- paste highlighted text to new copilot
-        var newWindow = new Window(new CopilotDEMOPage());
+        var newWindow = new Window(new CopilotPage());
         Application.Current.OpenWindow(newWindow);
     }
 }
