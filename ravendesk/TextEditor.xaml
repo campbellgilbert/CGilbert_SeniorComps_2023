@@ -35,9 +35,11 @@
             <StackLayout BackgroundColor="{StaticResource Haze}" Orientation="Horizontal">
                 <Button Text="File"
                         Style="{StaticResource Button1}"
+                        x:Name="fileSaverResult"
                         />
                 <Button Text="Save"
                         Style="{StaticResource Button1}"
+                        Clicked="OnSaveClicked"
                         />
             </StackLayout>
         </Frame>
@@ -75,7 +77,6 @@
                     Text="Speech To Text"
                     Style="{StaticResource Button2}"
                     Command="{Binding ListenCommand}"
-                    Clicked="OnSTTClicked"
                     IsVisible="True"
                 />
                 <Button 
@@ -83,7 +84,6 @@
                     Text="Listening..."
                     Style="{StaticResource Button2}"
                     Command="{Binding ListenCancelCommand}"
-                    Clicked="OnSTTEndClicked"
                     IsVisible="false"
                 />
                 

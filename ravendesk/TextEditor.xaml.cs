@@ -9,32 +9,22 @@ using System.Threading;
 using CommunityToolkit.Maui;
 using System.Collections.Generic;
 using Microsoft.Maui.Graphics;
-//using Windows.Globalization;
-using System.Globalization;
+using System.Text;
 
 namespace ravendesk;
 
 public partial class TextEditor : ContentPage
 {
-    //private readonly IFileSaver fileSaver;
+    private readonly IFileSaver fileSaver;
     //private readonly IFolderPicker folderPicker;
     private TextEditor editor;
+    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    private readonly ISpeechToText speechToText;
-
-    public Command ListenCommand { get; set; }
-    public Command ListenCancelCommand { get; set; }
-    public string RecognitionText { get; set; }
-    public TextEditor(ISpeechToText speechToText/*IFileSaver fileSaver, IFolderPicker folderPicker*/)
+    public TextEditor(IFileSaver fileSaver /*, IFolderPicker folderPicker*/)
     {
-        //this.fileSaver = fileSaver;
+        this.fileSaver = fileSaver;
         //this.folderPicker = folderPicker;
         InitializeComponent();
-        this.speechToText = speechToText;
-
-        /*ListenCommand = new Command(Listen);
-            ListenCancelCommand = new Command(ListenCancel);
-        BindingContext = this;*/
 
         this.Loaded += TextEditor_Loaded;
     }
@@ -52,6 +42,32 @@ public partial class TextEditor : ContentPage
         sel = textEditor.Text.Substring(start, length);
         return sel;
     }
+
+
+    public async void OnSaveClicked(object sender, EventArgs args)
+    {
+        await SaveFile(cancellationTokenSource.Token);
+    }
+    async Task SaveFile(CancellationToken cancellationToken)
+    {
+        if (textEditor.Text == null)
+        {
+            await DisplayAlert("No text", "Please enter some text", "OK");
+            return;
+        }
+
+        using var stream = new MemoryStream(Encoding.Default.GetBytes(textEditor.Text));
+        var fileSaverResult = await FileSaver.Default.SaveAsync("NewFile.txt", stream, cancellationToken);
+        if (!fileSaverResult.IsSuccessful)
+        {
+            await DisplayAlert("Save Unsuccessful", "Something went wrong.", "OK");
+            return;
+            //textEditor.Text = fileSaverResult.FilePath.ToString();
+            //await Toast.Make($"The file was saved successfully to location: {fileSaverResult.FilePath}").Show(cancellationToken);
+        }
+        
+    }
+
 
     //FLYOUT MENU METHODS
     private async void OnCopyClicked(object sender, EventArgs e)
@@ -124,87 +140,6 @@ public partial class TextEditor : ContentPage
     }
 
     //BUTTON METHODS
-
-    private async void OnSTTClicked(object sender, EventArgs e)
-    {
-        //Talkstart.IsVisible = false;
-        //Talkend.IsVisible = true;
-        int start = textEditor.CursorPosition;
-        string beforeCursor = textEditor.Text.Substring(0, start);
-        string afterCursor = textEditor.Text.Substring(start);
-        CancellationToken cancellationToken = new CancellationToken();
-        await StartListening(cancellationToken);
-        textEditor.Text = beforeCursor + RecognitionText + afterCursor;
-
-        //text editor dot text at start plus equals recognition text
-        //Talkstart.IsVisible = true;
-        //Talkend.IsVisible = false;
-    }
-
-    /*private async void OnSTTEndClicked(object sender, EventArgs e)
-    {
-        //await SpeechToText.StopListenAsync(CancellationToken.None);
-        await StopListening()
-    }*/
-
-    async Task StartListening(CancellationToken cancellationToken)
-    {
-        var isGranted = await speechToText.RequestPermissions(cancellationToken);
-        if (!isGranted)
-        {
-            await Toast.Make("Permission not granted").Show(CancellationToken.None);
-            return;
-        }
-
-        speechToText.RecognitionResultUpdated += OnRecognitionTextUpdated;
-        speechToText.RecognitionResultCompleted += OnRecognitionTextCompleted;
-        await SpeechToText.StartListenAsync(CultureInfo.CurrentCulture, CancellationToken.None);
-    }
-
-    async Task StopListening(CancellationToken cancellationToken)
-    {
-        await SpeechToText.StopListenAsync(CancellationToken.None);
-        SpeechToText.Default.RecognitionResultUpdated -= OnRecognitionTextUpdated;
-        SpeechToText.Default.RecognitionResultCompleted -= OnRecognitionTextCompleted;
-    }
-
-    void OnRecognitionTextUpdated(object? sender, SpeechToTextRecognitionResultUpdatedEventArgs args)
-    {
-        RecognitionText += args.RecognitionResult;
-    }
-
-    void OnRecognitionTextCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs args)
-    {
-        RecognitionText = args.RecognitionResult;
-    }
-
-
-    /*
-    async Task Listen(CancellationToken cancellationToken)
-    {
-        var isGranted = await speechToText.RequestPermissions(cancellationToken);
-        if (!isGranted)
-        {
-            await Toast.Make("Permission not granted").Show(CancellationToken.None);
-            return;
-        }
-
-        var recognitionResult = await speechToText.ListenAsync(CultureInfo.GetCultureInfo("en"),
-                                            new Progress<string>(partialText => {
-                                                RecognitionText += partialText + " ";
-                                            }), cancellationToken);
-
-        if (recognitionResult.IsSuccessful) {
-            RecognitionText = recognitionResult.Text;
-        } else {
-            await Toast.Make(recognitionResult.Exception?.Message ?? "Unable to recognize speech").Show(CancellationToken.None);
-        }
-    }
-
-    async Task StopListening(CancellationToken cancellationToken)
-    {
-        await SpeechToText.StopListenAsync(CancellationToken.None);
-    }*/
 
     private void OnBoldClicked(object sender, EventArgs e)
     {

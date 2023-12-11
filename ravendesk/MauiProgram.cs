@@ -11,15 +11,6 @@ namespace ravendesk
         {
             var builder = MauiApp.CreateBuilder();
 
-            //we can add the chatgpt api in the copilot page rather than here?
-
-            //CITE: https://github.com/RageAgainstThePixel/OpenAI-DotNet 
-
-            //add custom rend capabilities
-            
-                //XamarinCustomRenderer.iOS.Renderers.PressableViewRenderer));
-
-
             //add community toolkit
             builder.UseMauiApp<App>();
             builder.UseMauiCommunityToolkit();
@@ -42,6 +33,7 @@ namespace ravendesk
             //add filesaver, folderpicker
             builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
             builder.Services.AddSingleton<IFolderPicker>(FolderPicker.Default);
+
             return builder.Build();
             
 #if DEBUG
