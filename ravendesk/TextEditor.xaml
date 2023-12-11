@@ -52,25 +52,41 @@
                      x:Name="Search"
                      Placeholder="Search..."
                      BackgroundColor="{StaticResource Moonlight}"
-                    />
-                <Button Text="all buttons are WIP, please ignore!"
-                     Style="{StaticResource Button2}"
                  />
+                
                 <Button Text="Font"
-                    Style="{StaticResource Button2}"
+                        Style="{StaticResource Button2}"
+                        Clicked="OnFontChanged"
                 />
                 <Button Text="Text size"
-                    Style="{StaticResource Button2}"
+                        Style="{StaticResource Button2}"
+                        Clicked="OnFontSizeChanged"
                 />
                 <Button Text="Bold"
-                    Style="{StaticResource Button2}"
+                        Style="{StaticResource Button2}"
+                        Clicked="OnBoldClicked"
                 />
                 <Button Text="Italics"
-                    Style="{StaticResource Button2}"
+                        Style="{StaticResource Button2}"
+                        Clicked="OnItalicsClicked"
                 />
-                <Label Text="{Binding CursorPosition}"/>
-                <Label Text="{Binding SelectionLength}"/>
-                <Label Text="{Binding SelectedText}"/>
+                <Button
+                    x:Name="Talkstart"
+                    Text="Speech To Text"
+                    Style="{StaticResource Button2}"
+                    Command="{Binding ListenCommand}"
+                    Clicked="OnSTTClicked"
+                    IsVisible="True"
+                />
+                <Button 
+                    x:Name="Talkend"
+                    Text="Listening..."
+                    Style="{StaticResource Button2}"
+                    Command="{Binding ListenCancelCommand}"
+                    Clicked="OnSTTEndClicked"
+                    IsVisible="false"
+                />
+                
             </StackLayout>
         </Frame>
 

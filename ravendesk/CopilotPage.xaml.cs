@@ -63,7 +63,6 @@ public partial class CopilotPage : ContentPage
     {
         try
         {
-            //reformat entrytext because for some fucking reason this godforsaken program crashes when you feed it a LINE BREAK
             entryText = entryText.ReplaceLineEndings(" ");
 
             //retrieve thread

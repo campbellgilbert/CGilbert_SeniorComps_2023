@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Maui.Media;
 
 namespace ravendesk
 {
@@ -33,10 +34,14 @@ namespace ravendesk
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+
+            builder.Services.AddTransient<TextEditor>();
+#if WINDOWS
+            builder.Services.AddSingleton<ISpeechToText>(SpeechToText.Default);
+#endif
             //add filesaver, folderpicker
             builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
             builder.Services.AddSingleton<IFolderPicker>(FolderPicker.Default);
-
             return builder.Build();
             
 #if DEBUG

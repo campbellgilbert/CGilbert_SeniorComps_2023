@@ -1,4 +1,6 @@
-﻿namespace ravendesk
+﻿using CommunityToolkit.Maui.Media;
+
+namespace ravendesk
 {
     public partial class MainPage : ContentPage
     {
@@ -13,11 +15,12 @@
         private void MainPage_Loaded(object sender, EventArgs e)
         {
             //DisplayAlert("No text", "SOMETHING HAS GONE HORRIBLY WRONG", "OK");
-            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
+            ISpeechToText speechToText = new ISpeechToText();
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(speechToText), true);
         }
         private void OnTextEditorClicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(speechToText), true);
         }
     }
 }
