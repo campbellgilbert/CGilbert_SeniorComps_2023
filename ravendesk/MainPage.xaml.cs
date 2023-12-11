@@ -1,25 +1,26 @@
-﻿namespace ravendesk
+﻿using CommunityToolkit.Maui.Media;
+
+namespace ravendesk
 {
     public partial class MainPage : ContentPage
     {
         public MainPage()
         {
             InitializeComponent();
+
+            this.Loaded += MainPage_Loaded;
+            
         }
 
-        private void OnFileSelectButtonClicked(object sender, EventArgs e)
+        private void MainPage_Loaded(object sender, EventArgs e)
         {
-            Application.Current.MainPage.Navigation.PushModalAsync(new FileSelectPage(), true);
+            //DisplayAlert("No text", "SOMETHING HAS GONE HORRIBLY WRONG", "OK");
+            ISpeechToText speechToText = new ISpeechToText();
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(speechToText), true);
         }
-
-        private void OnTextEditButtonClicked(object sender, EventArgs e)
+        private void OnTextEditorClicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(), true);
-        }
-
-        private void OnCopilotButtonClicked(object sender, EventArgs e)
-        {
-            Application.Current.MainPage.Navigation.PushModalAsync(new CopilotDEMOPage(), true);
+            Application.Current.MainPage.Navigation.PushModalAsync(new TextEditor(speechToText), true);
         }
     }
 }

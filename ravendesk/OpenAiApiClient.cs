@@ -21,13 +21,13 @@ namespace ravendesk
         {
             var requestBody = new
             {
-                model = "gpt-4", 
+                model = "gpt-4",
                 prompt = prompt,
                 temperature = 0.7,
                 max_tokens = 500
             };
 
-            
+
             var response = await _httpClient.PostAsJsonAsync("https://api.openai.com/v1/engines/davinci/completions", requestBody);
             response.EnsureSuccessStatusCode();
 
