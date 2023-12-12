@@ -60,18 +60,31 @@
                         Style="{StaticResource Button2}"
                         Clicked="OnFontChanged"
                 />
-                <Button Text="Text size"
-                        Style="{StaticResource Button2}"
-                        Clicked="OnFontSizeChanged"
-                />
-                <Button Text="Bold"
-                        Style="{StaticResource Button2}"
-                        Clicked="OnBoldClicked"
-                />
-                <Button Text="Italics"
-                        Style="{StaticResource Button2}"
-                        Clicked="OnItalicsClicked"
-                />
+                <Picker 
+                    x:Name="FontSizePicker"
+                    HorizontalOptions="Start"
+                    WidthRequest="70"
+                    SelectedIndex="2"
+                    SelectedIndexChanged="OnFontSizeChanged"
+                    SelectedItem="14">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Choose font size...</x:String>
+                            <x:String>10</x:String>
+                            <x:String>12</x:String>
+                            <x:String>14</x:String>
+                            <x:String>16</x:String>
+                            <x:String>18</x:String>
+                            <x:String>20</x:String>
+                            <x:String>22</x:String>
+                            <x:String>24</x:String>
+                            <x:String>26</x:String>
+                            <x:String>28</x:String>
+                            <x:String>30</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
                 <Button
                     x:Name="Talkstart"
                     Text="Speech To Text"
@@ -99,7 +112,11 @@
             IsSpellCheckEnabled="true"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
-            BackgroundColor="{StaticResource White}">
+            BackgroundColor="{StaticResource White}"
+            TextColor = "{StaticResource RavenBlack}"
+            FontAttributes="None"
+            FontSize="14"
+            >
 
         <FlyoutBase.ContextFlyout>
             <MenuFlyout>

@@ -13,6 +13,9 @@ using System.Text;
 
 namespace ravendesk;
 
+//for RTF: 
+//what didnt work: https://medium.com/@adinas/using-tinemce-in-your-net-maui-app-b869c9c22d8c
+// what i wanted to use but couldnt find for some reason: https://docs.devexpress.com/MAUI/DevExpress.Maui.Editors
 public partial class TextEditor : ContentPage
 {
     private readonly IFileSaver fileSaver;
@@ -141,27 +144,28 @@ public partial class TextEditor : ContentPage
 
     //BUTTON METHODS
 
-    private void OnBoldClicked(object sender, EventArgs e)
-    {
-        string sel = SelectText(sender, e);
-        if (sel != null) {
-
-        }
-
-    }
-
-    private void OnItalicsClicked(object sender, EventArgs e)
-    {
-
-    }
-
+    
     private void OnFontChanged(object sender, EventArgs e)
     {
 
     }
     private void OnFontSizeChanged(object sender, EventArgs e)
     {
+        /*
+         <x:Array Type="{x:Type x:String}">
+                            <x:String>Micro</x:String>
+                            <x:String>Small</x:String>
+                            <x:String>Normal</x:String>
+                            <x:String>Big</x:String>
+                            <x:String>Large</x:String>
+                        </x:Array>
+         */
+        //default: 14
 
+        if (FontSizePicker.SelectedIndex > 0)
+        {
+            textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
+        }
     }
     
     private void OnTextColorChanged(object sender, EventArgs e)
