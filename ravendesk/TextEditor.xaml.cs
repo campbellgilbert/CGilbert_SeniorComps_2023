@@ -164,6 +164,35 @@ public partial class TextEditor : ContentPage
             textEditor.FontSize = 14;
         }
     }
+
+
+   private async void SpeechToText(object sender, EventArgs e)
+    {
+        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
+        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
+        textEditor.Text += response;
+        
+         var api = new OpenAIClient();
+        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
+        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
+        Console.WriteLine(response);
+                
+    }
+
+    private async void TextToSpeech(object sender, EventArgs e)
+    {
+        var api = new OpenAIClient();
+        var request = new SpeechRequest("Hello World!");
+        async Task ChunkCallback(ReadOnlyMemory<byte> chunkCallback)
+        {
+            // TODO Implement audio playback as chunks arrive
+            await Task.CompletedTask;
+        }
+
+        //var response = await api.AudioEndpoint.CreateSpeechAsync(request, ChunkCallback);
+        //sawait File.WriteAllBytesAsync("../../../Assets/HelloWorld.mp3", response.ToArray());
+    }
+
     
 
     //OTHER
