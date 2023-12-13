@@ -46,7 +46,6 @@ public partial class TextEditor : ContentPage
         return sel;
     }
 
-
     public async void OnSaveClicked(object sender, EventArgs args)
     {
         await SaveFile(cancellationTokenSource.Token);
@@ -58,15 +57,12 @@ public partial class TextEditor : ContentPage
             await DisplayAlert("No text", "Please enter some text", "OK");
             return;
         }
-
         using var stream = new MemoryStream(Encoding.Default.GetBytes(textEditor.Text));
         var fileSaverResult = await FileSaver.Default.SaveAsync("NewFile.txt", stream, cancellationToken);
         if (!fileSaverResult.IsSuccessful)
         {
             await DisplayAlert("Save Unsuccessful", "Something went wrong.", "OK");
             return;
-            //textEditor.Text = fileSaverResult.FilePath.ToString();
-            //await Toast.Make($"The file was saved successfully to location: {fileSaverResult.FilePath}").Show(cancellationToken);
         }
         
     }
@@ -147,20 +143,6 @@ public partial class TextEditor : ContentPage
 
     private void OnFontChanged(object sender, EventArgs e)
     {
-        /*
-        <x:String>Arial</x:String>
-        <x:String>Comic Sans</x:String>
-        <x:String>Courier</x:String>
-        <x:String>Open Sans</x:String>
-        <x:String>Times New Roman</x:String>
-        
-        switch (FontPicker.SelectedIndex) {
-            case 0:
-                return;
-            case 1:
-                textEditor.FontFamily()
-
-        }*/
 
         if (FontSizePicker.SelectedIndex > 0)
         {
@@ -183,10 +165,6 @@ public partial class TextEditor : ContentPage
         }
     }
     
-    private void OnTextColorChanged(object sender, EventArgs e)
-    {
-
-    }
 
     //OTHER
     private void OnSearched(object sender, EventArgs e)
