@@ -16,7 +16,7 @@
 		<ApplicationTitle>ravendesk</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.ravendesk</ApplicationId>
+		<ApplicationId>com.superawesomecompany.ravendesk</ApplicationId>
 		<ApplicationIdGuid>d97c191f-2483-4665-a751-ba92712ce4e8</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -31,6 +31,10 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
+		<RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -69,8 +73,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="CopilotPage.xaml.cs">
-	    <DependentUpon>CopilotPage.xaml</DependentUpon>
+	  <Compile Update="FeedbackPage.xaml.cs">
+	    <DependentUpon>FeedbackPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="FollowupPopup.xaml.cs">
 	    <DependentUpon>FollowupPopup.xaml</DependentUpon>
@@ -78,7 +82,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="CopilotPage.xaml">
+	  <MauiXaml Update="FeedbackPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="FollowupPopup.xaml">

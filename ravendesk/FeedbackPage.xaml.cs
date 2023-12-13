@@ -7,30 +7,26 @@ using OpenAI.Threads;
 using Microsoft.Maui;
 
 namespace ravendesk;
-
-public partial class CopilotPage : ContentPage
+public partial class FeedbackPage : ContentPage
 {
     private String entryText;
     private String followupText;
     private OpenAI.OpenAIClient api;
     private ThreadResponse thread;
     private AssistantResponse assistant;
-    private RunResponse run;
          
-    public CopilotPage()
+    public FeedbackPage()
 	{
         InitializeComponent();
-        this.Loaded += CopilotDEMOPage_Loaded;
-
+        this.Loaded += FeedbackPage_Loaded;
     }
 
-    private async void CopilotDEMOPage_Loaded(object sender, EventArgs e)
+    private async void FeedbackPage_Loaded(object sender, EventArgs e)
     {
         //STEP 1: create (retrieve) assistant
         var ident = new OpenAIAuthentication("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");
         var api = new OpenAIClient(ident);
         var assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO");
-
 
         //STEP 2: create thread
         var thread = await api.ThreadsEndpoint.CreateThreadAsync();
@@ -38,13 +34,8 @@ public partial class CopilotPage : ContentPage
         this.api = api;
         this.thread = thread;
 
-
         //Copy and paste entire file into chat to be reviewed.
-
-        /*FIXME: 
-         * way to do a single section of text after just highlighting it
-         * "too much text, please save and submit as file"
-         */
+        //potentially make it such that you can upload a full file?
 
         string clipboardText = await Clipboard.Default.GetTextAsync();
         if (!string.IsNullOrEmpty(clipboardText))
@@ -64,8 +55,8 @@ public partial class CopilotPage : ContentPage
         try
         {
             entryText = entryText.ReplaceLineEndings(" ");
-
-            //retrieve thread
+            
+            //retrieve created thread
             var thread = await api.ThreadsEndpoint.RetrieveThreadAsync(this.thread.Id);
 
             //send message and run
@@ -73,7 +64,6 @@ public partial class CopilotPage : ContentPage
                 "the text, do NOT say what X is) on the following: " + entryText;
             var message = await thread.CreateMessageAsync(request);
             var run = await thread.CreateRunAsync(assistant);
-
 
             while (run.Status != RunStatus.Completed)
             {
@@ -88,10 +78,7 @@ public partial class CopilotPage : ContentPage
 
             this.thread = await thread.UpdateAsync();
 
-            this.run = run;
-
             FollowupPicker.IsVisible = true;
-            //MoreFB.IsVisible = true;
             PickEntry.IsVisible = true;
             FollowUpButton.IsVisible = true;
 
@@ -104,6 +91,7 @@ public partial class CopilotPage : ContentPage
         }
     }
 
+    //FOLLOWUPS
     private async void OnPickerSelected(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
@@ -134,7 +122,6 @@ public partial class CopilotPage : ContentPage
 
     private async void OnFollowUpClicked(object sender, EventArgs e)
     {
-
         if (string.IsNullOrEmpty(followupText))
         {
            await DisplayAlert("No text", "Please pick a response and enter appropriate text", "OK");
@@ -143,9 +130,8 @@ public partial class CopilotPage : ContentPage
 
         var message = await thread.CreateMessageAsync(followupText);
         var run = await thread.CreateRunAsync(assistant);
-        this.run = run;
 
-        //FIXME: create new window, have it display the loading screen, then show completed text
+        //since we just want to keep the same run, let the button show loading
         while (run.Status != RunStatus.Completed)
         {
             FollowUpButton.Text = "Response loading...";
@@ -156,14 +142,12 @@ public partial class CopilotPage : ContentPage
         var messageList = await api.ThreadsEndpoint.ListMessagesAsync(thread.Id);
         var output = messageList.Items[0].PrintContent();
 
-
         //print msg to new window
         var newWindow = new Window(new FollowupPopup(output, "Continued Feedback"));
         newWindow.MaximumHeight = 900;
         newWindow.MaximumWidth = 400;
         Application.Current.OpenWindow(newWindow);
 
-        
         FollowUpButton.Text = "Get follow-up suggestions";
     }
    

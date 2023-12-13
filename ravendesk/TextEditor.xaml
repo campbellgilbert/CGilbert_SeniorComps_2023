@@ -14,15 +14,10 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Starlight}" />
                 <Setter Property="TextColor" Value="{StaticResource RavenBlack}" />
             </Style>
-            <Style x:Key="StackLayout1" TargetType="StackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource Midnight}" />
-            </Style>
-            <Style x:Key="StackLayout2" TargetType="StackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource Haze}" />
-            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <!--File I/O buttons-->
     <VerticalStackLayout Margin="10">
         <Frame BorderColor="{StaticResource QuillGray}"
               Padding="0">
@@ -45,10 +40,10 @@
                 <Picker 
                     x:Name="FontPicker"
                     HorizontalOptions="Start"
-                    WidthRequest="70"
-                    SelectedIndex="2"
+                    WidthRequest="150"
+                    SelectedIndex="5"
                     SelectedIndexChanged="OnFontChanged"
-                    SelectedItem="14">
+                    SelectedItem="Open Sans">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
                             <x:String>Choose font...</x:String>
@@ -93,12 +88,17 @@
                     Style="{StaticResource Button2}"
                     Command="{Binding ListenCommand}"
                     Clicked="OnSTTClicked"
-                    IsVisible="True"
                 />
-
+                <Button
+                    x:Name="FullTextEdit"
+                    Text="Get Feedback (Full Text)"
+                    Style="{StaticResource Button2}"
+                    Clicked="OnFullFeedbackClicked"
+                />
             </StackLayout>
         </Frame>
 
+        <!--Text Editor-->
         <Editor 
             x:Name="textEditor" 
             CursorPosition="{Binding CursorPosition, Mode=OneWayToSource}"
@@ -111,8 +111,9 @@
             BackgroundColor="{StaticResource White}"
             TextColor = "{StaticResource RavenBlack}"
             FontSize="14"
-            FontFamily="ComicSans">
+            FontFamily="Open Sans">
 
+            <!--Editor flyout-->
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
@@ -120,7 +121,6 @@
                     <MenuFlyoutItem Text="Cut" Clicked="OnCutClicked"/>
                     <MenuFlyoutItem Text="Get Feedback (Selected Text)" Clicked="OnPartialFeedbackClicked"/>
                     <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
-
                 </MenuFlyout>
             </FlyoutBase.ContextFlyout>
 

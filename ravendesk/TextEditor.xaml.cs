@@ -8,12 +8,19 @@ namespace ravendesk;
 public partial class TextEditor : ContentPage
 {
     private TextEditor editor;
+
+    //file & save variables
     private readonly IFileSaver fileSaver;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
     //STT
     static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
     static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
+
+    /*
+     * LOAD/BASE METHODS
+     * Instantiates and loads base word processor.
+     */
 
     public TextEditor(IFileSaver fileSaver)
     {
@@ -28,7 +35,10 @@ public partial class TextEditor : ContentPage
         await Clipboard.Default.SetTextAsync(null);
     }
 
-    //HELPER FUNCTIONS
+    /*
+     * HELPERS
+     * Called by buttons/flyouts/etc/
+     */
     public string SelectText(object sender, EventArgs e)
     {
         string sel = "";
@@ -38,7 +48,7 @@ public partial class TextEditor : ContentPage
         return sel;
     }
     
-    async Task SaveFile(CancellationToken cancellationToken)
+    private async Task SaveFile(CancellationToken cancellationToken)
     {
         if (textEditor.Text == null)
         {
@@ -77,8 +87,8 @@ public partial class TextEditor : ContentPage
                 break;
         }
     }
-    
-    async Task<FileResult> PickFile(PickOptions options)
+
+    public async Task<FileResult> PickFile(PickOptions options)
     {
         try
         {
@@ -101,20 +111,30 @@ public partial class TextEditor : ContentPage
         return null;
     }
 
-    async Task PullUpFile(string filepath)
+    public async Task PullUpFile(string filepath)
     {
+        //if file already open, give option to save
+        if (textEditor.Text != null)
+        {
+            //save current file
+            await SaveFile(cancellationTokenSource.Token);
+            //then clear out the editor
+            textEditor.Text = null;
+        }
+
         if (!File.Exists(filepath))
         {
             await DisplayAlert("Error: No Such File", "Something went wrong.", "OK");
         }
-
         using (StreamReader sr = File.OpenText(filepath))
         {
             textEditor.Text = sr.ReadToEnd();
         }
     }
 
-    //BUTTON METHODS
+    /*
+     * BUTTON/TOOLBAR ONCLICKEDS
+     */
     public async void OnSaveClicked(object sender, EventArgs args)
     {
         await SaveFile(cancellationTokenSource.Token);
@@ -134,7 +154,6 @@ public partial class TextEditor : ContentPage
             PickerTitle = "Please select a .txt file.",
             FileTypes = supportedFiletypes,
         };
-
         FileResult filePicked = await PickFile(options);
         await PullUpFile(filePicked.FullPath);
     }
@@ -143,7 +162,7 @@ public partial class TextEditor : ContentPage
     {
         if (FontSizePicker.SelectedIndex > 0)
         {
-            textEditor.FontFamily = FontPicker.SelectedItem.ToString();
+            this.textEditor.FontFamily = FontPicker.SelectedItem.ToString();
         }
         else
         {
@@ -155,7 +174,7 @@ public partial class TextEditor : ContentPage
     {
         if (FontSizePicker.SelectedIndex > 0)
         {
-            textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
+            this.textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
         } else
         {
             textEditor.FontSize = 14;
@@ -187,7 +206,9 @@ public partial class TextEditor : ContentPage
     }
 
 
-    //FLYOUT MENU METHODS
+    /*
+     * FLYOUT MENU ONCLICKEDS
+     */
     private async void OnCopyClicked(object sender, EventArgs e)
     {
         string sel = SelectText(sender, e);
@@ -249,14 +270,14 @@ public partial class TextEditor : ContentPage
     private async void OnFullFeedbackClicked(object sender, EventArgs e)
     {
         await Clipboard.Default.SetTextAsync(textEditor.Text);
-        var newWindow = new Window(new CopilotPage());
+        var newWindow = new Window(new FeedbackPage());
         Application.Current.OpenWindow(newWindow);
     }
 
     private void OnPartialFeedbackClicked(object sender, EventArgs e)
     {
         OnCopyClicked(sender, e);
-        var newWindow = new Window(new CopilotPage());
+        var newWindow = new Window(new FeedbackPage());
         Application.Current.OpenWindow(newWindow);
     }
 

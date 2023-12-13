@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ravendesk.FeedbackPage"
+             Title="FeedbackPage">
+
+    <!-- Scrollable Content -->
+    <ScrollView VerticalOptions="FillAndExpand"
+                HorizontalOptions="Center">
+        <VerticalStackLayout Spacing="20"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Start">
+            <Label Text="AI Editor Recommendations"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="Large"
+                   TextColor="{StaticResource Midnight}"/>
+
+            <!-- Large Text Label -->
+            <Label 
+                x:Name="SmallLabel"
+                HorizontalOptions="Center"
+                TextColor= "{StaticResource Midnight}"/>
+
+            <!-- Picker and Entry in Horizontal Layout -->
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Picker x:Name="FollowupPicker"
+                        Title="Want more feedback?"
+                        HorizontalOptions="Start"
+                        WidthRequest="150"
+                        IsVisible="False"
+                        SelectedIndexChanged="OnPickerSelected">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Can you elaborate on Number:</x:String>
+                            <x:String>Can you give some suggestions as to how to implement Number:</x:String>
+                            <x:String>Can you give feedback on just this section:</x:String>
+                            <x:String>Can you give feedback on just this character:</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry x:Name="PickEntry"
+                       Placeholder="8/Once upon a time.../Tyler Durden/etc."
+                       BackgroundColor="{StaticResource White}"
+                       IsVisible="False"
+                       TextChanged="OnEntryFilled"
+                       HorizontalOptions="Start"
+                       WidthRequest="150"/>
+            </HorizontalStackLayout>
+
+            <!-- Button -->
+            <Button x:Name="FollowUpButton"
+                    Text="Get follow-up suggestions"
+                    HorizontalOptions="Center"
+                    BackgroundColor="{StaticResource PRain}"
+                    TextColor="{StaticResource Moonlight}"
+                    IsVisible="False"
+                    Clicked="OnFollowUpClicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

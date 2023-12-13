@@ -32,12 +32,8 @@ namespace ravendesk
 
 
             builder.Services.AddTransient<TextEditor>();
-
-            //add filesaver, folderpicker
             builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
-            return builder.Build();
-            
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
