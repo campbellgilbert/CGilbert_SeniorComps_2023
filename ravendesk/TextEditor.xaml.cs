@@ -1,29 +1,21 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Maui.Storage;
-using Microsoft.Maui.Controls;
-using System.Globalization;
 using System.Text;
-using System.Threading;
-using CommunityToolkit.Maui;
-using System.Collections.Generic;
-using Microsoft.Maui.Graphics;
-using System.Text;
+using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.CognitiveServices.Speech;
 
 namespace ravendesk;
 
-//for RTF: 
-//what didnt work: https://medium.com/@adinas/using-tinemce-in-your-net-maui-app-b869c9c22d8c
-// what i wanted to use but couldnt find for some reason: https://docs.devexpress.com/MAUI/DevExpress.Maui.Editors
 public partial class TextEditor : ContentPage
 {
-    private readonly IFileSaver fileSaver;
-    //private readonly IFolderPicker folderPicker;
     private TextEditor editor;
+    private readonly IFileSaver fileSaver;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    public TextEditor(IFileSaver fileSaver /*, IFolderPicker folderPicker*/)
+    //STT
+    static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
+    static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
+
+    public TextEditor(IFileSaver fileSaver)
     {
         this.fileSaver = fileSaver;
         //this.folderPicker = folderPicker;
@@ -45,11 +37,7 @@ public partial class TextEditor : ContentPage
         sel = textEditor.Text.Substring(start, length);
         return sel;
     }
-
-    public async void OnSaveClicked(object sender, EventArgs args)
-    {
-        await SaveFile(cancellationTokenSource.Token);
-    }
+    
     async Task SaveFile(CancellationToken cancellationToken)
     {
         if (textEditor.Text == null)
@@ -64,7 +52,138 @@ public partial class TextEditor : ContentPage
             await DisplayAlert("Save Unsuccessful", "Something went wrong.", "OK");
             return;
         }
-        
+    }
+
+    private async void GetSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
+    {
+        switch (speechRecognitionResult.Reason)
+        {
+            case ResultReason.RecognizedSpeech:
+                textEditor.Text += speechRecognitionResult.Text.ToString();
+                break;
+            case ResultReason.NoMatch:
+                await DisplayAlert("Error: NOMATCH", "Speech unrecognizable.", "OK");
+                break;
+            case ResultReason.Canceled:
+                var cancellation = CancellationDetails.FromResult(speechRecognitionResult);
+                await DisplayAlert("CANCELED", cancellation.Reason.ToString(), "OK");
+
+                if (cancellation.Reason == CancellationReason.Error)
+                {
+                    await DisplayAlert("CANCELED: Error", "Error Code:" + cancellation.ErrorCode
+                        + "\n Error Details: " + cancellation.ErrorDetails +
+                        "\n Check your speech resource key and region values.", "OK");
+                }
+                break;
+        }
+    }
+    
+    async Task<FileResult> PickFile(PickOptions options)
+    {
+        try
+        {
+            var result = await FilePicker.Default.PickAsync(options);
+            if (result != null)
+            {
+                if (result.FileName.EndsWith("txt", StringComparison.OrdinalIgnoreCase))
+                {
+                    var filepath = result.FullPath;
+                    //using var stream = await result.OpenReadAsync();
+                }
+            }
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("File Selection Error", "Something went wrong.", "OK");
+        }
+
+        return null;
+    }
+
+    async Task PullUpFile(string filepath)
+    {
+        if (!File.Exists(filepath))
+        {
+            await DisplayAlert("Error: No Such File", "Something went wrong.", "OK");
+        }
+
+        using (StreamReader sr = File.OpenText(filepath))
+        {
+            textEditor.Text = sr.ReadToEnd();
+        }
+    }
+
+    //BUTTON METHODS
+    public async void OnSaveClicked(object sender, EventArgs args)
+    {
+        await SaveFile(cancellationTokenSource.Token);
+    }
+   
+    public async void OnFileSelectClicked(object sender, EventArgs args)
+    {
+        var supportedFiletypes = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.WinUI, new[] { ".txt", ".rtf" } }, // file extension
+                    { DevicePlatform.macOS, new[] { "txt" } }, // UTType values
+                });
+
+        PickOptions options = new()
+        {
+            PickerTitle = "Please select a .txt file.",
+            FileTypes = supportedFiletypes,
+        };
+
+        FileResult filePicked = await PickFile(options);
+        await PullUpFile(filePicked.FullPath);
+    }
+
+    private void OnFontChanged(object sender, EventArgs e)
+    {
+        if (FontSizePicker.SelectedIndex > 0)
+        {
+            textEditor.FontFamily = FontPicker.SelectedItem.ToString();
+        }
+        else
+        {
+            textEditor.FontFamily = "Open Sans";
+        }
+    }
+    
+    private void OnFontSizeChanged(object sender, EventArgs e)
+    {
+        if (FontSizePicker.SelectedIndex > 0)
+        {
+            textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
+        } else
+        {
+            textEditor.FontSize = 14;
+        }
+    }
+
+    private async void OnSTTClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
+            speechConfig.SpeechRecognitionLanguage = "en-US";
+
+            using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
+            using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+            Talkstart.FontAttributes = FontAttributes.Italic;
+            Talkstart.Text = "Speak into your microphone...";
+
+            var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
+            GetSpeechRecognitionResult(speechRecognitionResult);
+        } 
+        catch
+        {
+            await DisplayAlert("Error: Speech to Text Failure", "Something went wrong.", "OK");
+        }
+        Talkstart.Text = "Speech To Text";
+        Talkstart.FontAttributes = FontAttributes.None;
     }
 
 
@@ -80,7 +199,7 @@ public partial class TextEditor : ContentPage
     {
         int start = textEditor.CursorPosition;
         int length = textEditor.SelectionLength;
-        
+
         //if no text is selected -- just paste wherever you are
         string beforeCursor = textEditor.Text.Substring(0, start);
         string afterCursor = textEditor.Text.Substring(start + length);
@@ -101,14 +220,18 @@ public partial class TextEditor : ContentPage
         string clipboardText = await Clipboard.Default.GetTextAsync();
         string insert;
 
-        if (!string.IsNullOrEmpty(clipboardText)) {
+        if (!string.IsNullOrEmpty(clipboardText))
+        {
             insert = clipboardText;
-        } else {
+        }
+        else
+        {
             await DisplayAlert("No text", "Please enter some text", "OK");
             return;
         }
 
-        if (textEditor.Text == null) {
+        if (textEditor.Text == null)
+        {
             textEditor.Text = insert;
             return;
         }
@@ -132,75 +255,9 @@ public partial class TextEditor : ContentPage
 
     private void OnPartialFeedbackClicked(object sender, EventArgs e)
     {
-        //await Clipboard.Default.SetTextAsync(SelectedText);
         OnCopyClicked(sender, e);
         var newWindow = new Window(new CopilotPage());
         Application.Current.OpenWindow(newWindow);
     }
-
-    //BUTTON METHODS
-
-
-    private void OnFontChanged(object sender, EventArgs e)
-    {
-
-        if (FontSizePicker.SelectedIndex > 0)
-        {
-            textEditor.FontFamily = FontPicker.SelectedItem.ToString();
-        }
-        else
-        {
-            textEditor.FontFamily = "Open Sans";
-        }
-
-    }
-    private void OnFontSizeChanged(object sender, EventArgs e)
-    {
-        if (FontSizePicker.SelectedIndex > 0)
-        {
-            textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
-        } else
-        {
-            textEditor.FontSize = 14;
-        }
-    }
-
-
-   private async void SpeechToText(object sender, EventArgs e)
-    {
-        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
-        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
-        textEditor.Text += response;
-        
-         var api = new OpenAIClient();
-        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
-        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
-        Console.WriteLine(response);
-                
-    }
-
-    private async void TextToSpeech(object sender, EventArgs e)
-    {
-        var api = new OpenAIClient();
-        var request = new SpeechRequest("Hello World!");
-        async Task ChunkCallback(ReadOnlyMemory<byte> chunkCallback)
-        {
-            // TODO Implement audio playback as chunks arrive
-            await Task.CompletedTask;
-        }
-
-        //var response = await api.AudioEndpoint.CreateSpeechAsync(request, ChunkCallback);
-        //sawait File.WriteAllBytesAsync("../../../Assets/HelloWorld.mp3", response.ToArray());
-    }
-
-    
-
-    //OTHER
-    private void OnSearched(object sender, EventArgs e)
-    {
-
-    }
-
-
 
 }

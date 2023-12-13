@@ -24,18 +24,12 @@
     </ContentPage.Resources>
 
     <VerticalStackLayout Margin="10">
-
-        <!--contains a frame object, contains a horizstacklayout object-->
-        <!--how to create fully functional bar w buttons?-->
-        
-        <!--Menu bar-->
         <Frame BorderColor="{StaticResource QuillGray}"
               Padding="0">
-
             <StackLayout BackgroundColor="{StaticResource Haze}" Orientation="Horizontal">
                 <Button Text="File"
                         Style="{StaticResource Button1}"
-                        x:Name="fileSaverResult"
+                        Clicked="OnFileSelectClicked"
                         />
                 <Button Text="Save"
                         Style="{StaticResource Button1}"
@@ -43,19 +37,11 @@
                         />
             </StackLayout>
         </Frame>
-        
+
         <!--Toolbar-->
         <Frame BorderColor="{StaticResource QuillGray}"
                Padding="0">
-            
             <StackLayout BackgroundColor="{StaticResource Twilight}" Orientation="Horizontal">
-                <!--Search-->
-                <Entry
-                     x:Name="Search"
-                     Placeholder="Search..."
-                     BackgroundColor="{StaticResource Moonlight}"
-                 />
-                
                 <Picker 
                     x:Name="FontPicker"
                     HorizontalOptions="Start"
@@ -75,7 +61,7 @@
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
-                
+
                 <Picker 
                     x:Name="FontSizePicker"
                     HorizontalOptions="Start"
@@ -106,16 +92,10 @@
                     Text="Speech To Text"
                     Style="{StaticResource Button2}"
                     Command="{Binding ListenCommand}"
+                    Clicked="OnSTTClicked"
                     IsVisible="True"
                 />
-                <Button 
-                    x:Name="Talkend"
-                    Text="Listening..."
-                    Style="{StaticResource Button2}"
-                    Command="{Binding ListenCancelCommand}"
-                    IsVisible="false"
-                />
-                
+
             </StackLayout>
         </Frame>
 
@@ -131,29 +111,19 @@
             BackgroundColor="{StaticResource White}"
             TextColor = "{StaticResource RavenBlack}"
             FontSize="14"
-            FontFamily="ComicSans"
-            >
+            FontFamily="ComicSans">
 
-        <FlyoutBase.ContextFlyout>
-            <MenuFlyout>
-                <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
-                <MenuFlyoutItem Text="Paste" Clicked="OnPasteClicked"/>
+            <FlyoutBase.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Copy" Clicked="OnCopyClicked"/>
+                    <MenuFlyoutItem Text="Paste" Clicked="OnPasteClicked"/>
                     <MenuFlyoutItem Text="Cut" Clicked="OnCutClicked"/>
                     <MenuFlyoutItem Text="Get Feedback (Selected Text)" Clicked="OnPartialFeedbackClicked"/>
-                <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
+                    <MenuFlyoutItem Text="Get Feedback (Full Text)" Clicked="OnFullFeedbackClicked"/>
 
-            </MenuFlyout>
-        </FlyoutBase.ContextFlyout>
+                </MenuFlyout>
+            </FlyoutBase.ContextFlyout>
 
         </Editor>
     </VerticalStackLayout>
-
-    <!--<Grid>
-
-        <Editor x:Name="textEditor" Text="" HeightRequest="500" />
-
-        <Button Text="Save" VerticalOptions="End" Clicked="OnSaveClicked" />
-        <Button Text="File Select" VerticalOptions="End" Clicked="OnFileSelectButtonClicked"/>
-    </Grid>-->
-    
 </ContentPage>

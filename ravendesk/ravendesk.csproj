@@ -69,9 +69,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="FileSelectPage.xaml.cs">
-	    <DependentUpon>FileSelectPage.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="CopilotPage.xaml.cs">
 	    <DependentUpon>CopilotPage.xaml</DependentUpon>
 	  </Compile>
@@ -81,9 +78,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="FileSelectPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="CopilotPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
