@@ -56,10 +56,25 @@
                      BackgroundColor="{StaticResource Moonlight}"
                  />
                 
-                <Button Text="Font"
-                        Style="{StaticResource Button2}"
-                        Clicked="OnFontChanged"
-                />
+                <Picker 
+                    x:Name="FontPicker"
+                    HorizontalOptions="Start"
+                    WidthRequest="70"
+                    SelectedIndex="2"
+                    SelectedIndexChanged="OnFontChanged"
+                    SelectedItem="14">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Choose font...</x:String>
+                            <x:String>Arial</x:String>
+                            <x:String>Comic Sans</x:String>
+                            <x:String>Courier</x:String>
+                            <x:String>Open Sans</x:String>
+                            <x:String>Times New Roman</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                
                 <Picker 
                     x:Name="FontSizePicker"
                     HorizontalOptions="Start"
@@ -114,8 +129,8 @@
             VerticalOptions="FillAndExpand"
             BackgroundColor="{StaticResource White}"
             TextColor = "{StaticResource RavenBlack}"
-            FontAttributes="None"
             FontSize="14"
+            FontFamily="ComicSans"
             >
 
         <FlyoutBase.ContextFlyout>

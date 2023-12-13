@@ -144,27 +144,42 @@ public partial class TextEditor : ContentPage
 
     //BUTTON METHODS
 
-    
+
     private void OnFontChanged(object sender, EventArgs e)
     {
+        /*
+        <x:String>Arial</x:String>
+        <x:String>Comic Sans</x:String>
+        <x:String>Courier</x:String>
+        <x:String>Open Sans</x:String>
+        <x:String>Times New Roman</x:String>
+        
+        switch (FontPicker.SelectedIndex) {
+            case 0:
+                return;
+            case 1:
+                textEditor.FontFamily()
+
+        }*/
+
+        if (FontSizePicker.SelectedIndex > 0)
+        {
+            textEditor.FontFamily = FontPicker.SelectedItem.ToString();
+        }
+        else
+        {
+            textEditor.FontFamily = "Open Sans";
+        }
 
     }
     private void OnFontSizeChanged(object sender, EventArgs e)
     {
-        /*
-         <x:Array Type="{x:Type x:String}">
-                            <x:String>Micro</x:String>
-                            <x:String>Small</x:String>
-                            <x:String>Normal</x:String>
-                            <x:String>Big</x:String>
-                            <x:String>Large</x:String>
-                        </x:Array>
-         */
-        //default: 14
-
         if (FontSizePicker.SelectedIndex > 0)
         {
             textEditor.FontSize = double.Parse(FontSizePicker.SelectedItem.ToString());
+        } else
+        {
+            textEditor.FontSize = 14;
         }
     }
     

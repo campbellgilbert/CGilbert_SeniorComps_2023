@@ -21,8 +21,12 @@ namespace ravendesk
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
             {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Regular.ttf", "Open Sans");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("arial.ttf", "Arial");
+                fonts.AddFont("COMIC.ttf", "Comic Sans");
+                fonts.AddFont("CourierPrime-Regular.ttf", "Courier");
+                fonts.AddFont("TimesNewRoman-Regular.ttf", "Times New Roman");
             });
 
 
