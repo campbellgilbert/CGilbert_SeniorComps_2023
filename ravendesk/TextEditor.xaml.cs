@@ -10,6 +10,8 @@ using CommunityToolkit.Maui;
 using System.Collections.Generic;
 using Microsoft.Maui.Graphics;
 using System.Text;
+using OpenAI;
+using OpenAI.Audio;
 
 namespace ravendesk;
 
@@ -19,14 +21,16 @@ namespace ravendesk;
 public partial class TextEditor : ContentPage
 {
     private readonly IFileSaver fileSaver;
-    //private readonly IFolderPicker folderPicker;
     private TextEditor editor;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+    private OpenAI.OpenAIClient api;
 
     public TextEditor(IFileSaver fileSaver /*, IFolderPicker folderPicker*/)
     {
         this.fileSaver = fileSaver;
-        //this.folderPicker = folderPicker;
+        var ident = new OpenAIAuthentication("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");
+        this.api = new OpenAIClient(ident);
+
         InitializeComponent();
 
         this.Loaded += TextEditor_Loaded;
@@ -45,7 +49,6 @@ public partial class TextEditor : ContentPage
         sel = textEditor.Text.Substring(start, length);
         return sel;
     }
-
 
     public async void OnSaveClicked(object sender, EventArgs args)
     {
@@ -129,9 +132,20 @@ public partial class TextEditor : ContentPage
 
     private async void OnFullFeedbackClicked(object sender, EventArgs e)
     {
-        await Clipboard.Default.SetTextAsync(textEditor.Text);
-        var newWindow = new Window(new CopilotPage());
-        Application.Current.OpenWindow(newWindow);
+        //save file to be passed into copilot if it's too long
+        if (textEditor.Text.Length > 1000)
+        {
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(textEditor.Text));
+            var fileSaverResult = await FileSaver.Default.SaveAsync("NewFile.txt", stream, cancellationTokenSource.Token);
+            var newWindow = new Window(new CopilotPage(fileSaverResult.FilePath));
+            Application.Current.OpenWindow(newWindow);
+        }
+        else
+        {
+            await Clipboard.Default.SetTextAsync(textEditor.Text);
+            var newWindow = new Window(new CopilotPage());
+            Application.Current.OpenWindow(newWindow);
+        }
     }
 
     private void OnPartialFeedbackClicked(object sender, EventArgs e)
@@ -144,25 +158,9 @@ public partial class TextEditor : ContentPage
 
     //BUTTON METHODS
 
-
     private void OnFontChanged(object sender, EventArgs e)
-    {
-        /*
-        <x:String>Arial</x:String>
-        <x:String>Comic Sans</x:String>
-        <x:String>Courier</x:String>
-        <x:String>Open Sans</x:String>
-        <x:String>Times New Roman</x:String>
-        
-        switch (FontPicker.SelectedIndex) {
-            case 0:
-                return;
-            case 1:
-                textEditor.FontFamily()
-
-        }*/
-
-        if (FontSizePicker.SelectedIndex > 0)
+    { 
+        if (FontPicker.SelectedIndex > 0)
         {
             textEditor.FontFamily = FontPicker.SelectedItem.ToString();
         }
@@ -170,8 +168,8 @@ public partial class TextEditor : ContentPage
         {
             textEditor.FontFamily = "Open Sans";
         }
-
     }
+
     private void OnFontSizeChanged(object sender, EventArgs e)
     {
         if (FontSizePicker.SelectedIndex > 0)
@@ -182,12 +180,36 @@ public partial class TextEditor : ContentPage
             textEditor.FontSize = 14;
         }
     }
-    
-    private void OnTextColorChanged(object sender, EventArgs e)
-    {
 
+  /*  private async void SpeechToText(object sender, EventArgs e)
+    {
+        
+        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
+        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
+        textEditor.Text += response;
+        /*
+         var api = new OpenAIClient();
+        var request = new AudioTranscriptionRequest(Path.GetFullPath(audioAssetPath), language: "en");
+        var response = await api.AudioEndpoint.CreateTranscriptionAsync(request);
+        Console.WriteLine(response);
+                
     }
 
+    private async void TextToSpeech(object sender, EventArgs e)
+    {
+        var api = new OpenAIClient();
+        var request = new SpeechRequest("Hello World!");
+        async Task ChunkCallback(ReadOnlyMemory<byte> chunkCallback)
+        {
+            // TODO Implement audio playback as chunks arrive
+            await Task.CompletedTask;
+        }
+
+        //var response = await api.AudioEndpoint.CreateSpeechAsync(request, ChunkCallback);
+        //sawait File.WriteAllBytesAsync("../../../Assets/HelloWorld.mp3", response.ToArray());
+    }
+
+*/
     //OTHER
     private void OnSearched(object sender, EventArgs e)
     {

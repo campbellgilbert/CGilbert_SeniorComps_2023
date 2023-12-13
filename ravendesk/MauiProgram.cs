@@ -25,6 +25,7 @@ namespace ravendesk
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("arial.ttf", "Arial");
                 fonts.AddFont("COMIC.ttf", "Comic Sans");
+                fonts.AddFont("Lexend-Regular.ttf", "Lexend");
                 fonts.AddFont("CourierPrime-Regular.ttf", "Courier");
                 fonts.AddFont("TimesNewRoman-Regular.ttf", "Times New Roman");
             });

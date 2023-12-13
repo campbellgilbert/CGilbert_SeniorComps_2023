@@ -5,6 +5,8 @@ using OpenAI.Assistants;
 using OpenAI;
 using OpenAI.Threads;
 using Microsoft.Maui;
+using OpenAI.Files;
+//using AuthenticationServices;
 
 namespace ravendesk;
 
@@ -15,48 +17,60 @@ public partial class CopilotPage : ContentPage
     private OpenAI.OpenAIClient api;
     private ThreadResponse thread;
     private AssistantResponse assistant;
-    private RunResponse run;
+    private string filepath;
          
     public CopilotPage()
 	{
         InitializeComponent();
-        this.Loaded += CopilotDEMOPage_Loaded;
 
+        //if no file is passed in, clear it out so nothing gets left over + delete any prev files from the assistant
+        this.filepath = null; 
+        this.Loaded += CopilotDEMOPage_Loaded;
+    }
+
+    public CopilotPage(string filepath)
+    {
+        InitializeComponent();
+        this.filepath = filepath;
+        this.Loaded += CopilotDEMOPage_Loaded;
     }
 
     private async void CopilotDEMOPage_Loaded(object sender, EventArgs e)
     {
         //STEP 1: create (retrieve) assistant
         var ident = new OpenAIAuthentication("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");
-        var api = new OpenAIClient(ident);
-        var assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO");
+        this.api = new OpenAIClient(ident);
+        this.assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO");
 
+            //STEP 1.5: delete any previous assistant files to clear things out
+        /*var filesList = await assistant.ListFilesAsync();
+        if (filesList.Items.Count > 0)
+        {
+            foreach (AssistantFileResponse file in filesList.Items)
+            {
+                bool isDeleted = await assistant.DeleteFileAsync(file.Id);
+            }
+        }*/
 
         //STEP 2: create thread
-        var thread = await api.ThreadsEndpoint.CreateThreadAsync();
-        this.assistant = assistant;
-        this.api = api;
-        this.thread = thread;
+        this.thread = await api.ThreadsEndpoint.CreateThreadAsync();
 
-
-        //Copy and paste entire file into chat to be reviewed.
-
-        /*FIXME: 
-         * way to do a single section of text after just highlighting it
-         * "too much text, please save and submit as file"
-         */
-
+        //STEP 3: Either copy and paste all text, or input file, and get feedback.
         string clipboardText = await Clipboard.Default.GetTextAsync();
-        if (!string.IsNullOrEmpty(clipboardText))
+        if (filepath != null)
         {
-            entryText = clipboardText;
-        } else
+            await GetInitResponse(filepath);
+        }
+        else if (!string.IsNullOrEmpty(clipboardText))
         {
-            await DisplayAlert("No text", "Please enter some text", "OK");
+            entryText = clipboardText;  
+            await GetInitResponse();
+        } 
+        else
+        {
+            await DisplayAlert("No text", "Please upload the file or enter some text", "OK");
             return;
         }
-
-        await GetInitResponse();
     }
 
     private async Task GetInitResponse()
@@ -74,6 +88,54 @@ public partial class CopilotPage : ContentPage
             var message = await thread.CreateMessageAsync(request);
             var run = await thread.CreateRunAsync(assistant);
 
+            while (run.Status != RunStatus.Completed)
+            {
+                SmallLabel.Text = "Response loading...";
+                run = await run.UpdateAsync();
+            }
+
+            //retrieve messages & print correct msg
+            var messageList = await api.ThreadsEndpoint.ListMessagesAsync(thread.Id);
+            string output = messageList.Items[0].PrintContent();
+            SmallLabel.Text = output;
+
+            this.thread = await thread.UpdateAsync();
+
+            FollowupPicker.IsVisible = true;
+            PickEntry.IsVisible = true;
+            FollowUpButton.IsVisible = true;
+
+            return;
+        }
+        catch
+        {
+            await DisplayAlert("Uh oh!", "Something went wrong.", ":(");
+            return;
+        }
+    }
+
+    //Inputs an entire .txt file to the assistant to get a response. To be used for longer inputs.
+    private async Task GetInitResponse(string filepath)
+    {
+        try
+        {
+            //retrieve thread
+            var thread = await api.ThreadsEndpoint.RetrieveThreadAsync(this.thread.Id);
+            try
+            {
+                //upload file to assistant
+                var assistantFile = await assistant.UploadFileAsync(filepath);
+                
+            } catch
+            {
+                await DisplayAlert("Uh oh!", "Issue with file uploading file at: " + filepath, "OK");
+                return;
+            }
+            //send message and run
+            var request = "Give X pieces of feedback (X being an appropriate number based on the length and intricacy of " +
+                "the text, do NOT say what X is) on the file attached.";
+            var message = await thread.CreateMessageAsync(request);
+            var run = await thread.CreateRunAsync(assistant);
 
             while (run.Status != RunStatus.Completed)
             {
@@ -88,10 +150,7 @@ public partial class CopilotPage : ContentPage
 
             this.thread = await thread.UpdateAsync();
 
-            this.run = run;
-
             FollowupPicker.IsVisible = true;
-            //MoreFB.IsVisible = true;
             PickEntry.IsVisible = true;
             FollowUpButton.IsVisible = true;
 
@@ -103,6 +162,7 @@ public partial class CopilotPage : ContentPage
             return;
         }
     }
+
 
     private async void OnPickerSelected(object sender, EventArgs e)
     {
@@ -143,7 +203,6 @@ public partial class CopilotPage : ContentPage
 
         var message = await thread.CreateMessageAsync(followupText);
         var run = await thread.CreateRunAsync(assistant);
-        this.run = run;
 
         //FIXME: create new window, have it display the loading screen, then show completed text
         while (run.Status != RunStatus.Completed)
