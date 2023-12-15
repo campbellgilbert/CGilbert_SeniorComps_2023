@@ -24,9 +24,10 @@ public partial class FeedbackPage : ContentPage
     private async void FeedbackPage_Loaded(object sender, EventArgs e)
     {
         //STEP 1: create (retrieve) assistant
-        var ident = new OpenAIAuthentication("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");
+	string apiKey = "!!!FIXME!!! ADD YOUR OWN API KEY HERE";
+        var ident = new OpenAIAuthentication(apiKey);
         var api = new OpenAIClient(ident);
-        var assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO");
+        var assistant = await api.AssistantsEndpoint.RetrieveAssistantAsync("asst_ORPuajHCiRDrjjG1eY92ysLO"); //retrieve Huginn model
 
         //STEP 2: create thread
         var thread = await api.ThreadsEndpoint.CreateThreadAsync();
